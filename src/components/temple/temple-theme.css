@@ -1,0 +1,315 @@
+.temple-admin {
+  --sidebar-width: 52px;
+  --topbar-height: 92px;
+  background: var(--temple-bg);
+  color: var(--temple-ink);
+}
+.temple-admin[data-nav-expanded="true"] .temple-sidebar {
+  width: 216px;
+}
+.temple-admin .temple-sidebar {
+  width: var(--sidebar-width);
+  background: var(--temple-dark);
+  box-shadow: 2px 0 12px rgb(8 39 31 / 12%);
+}
+.temple-admin .temple-brand {
+  padding: 0.875rem 0.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+}
+.temple-admin[data-nav-expanded="true"] .temple-brand {
+  padding-inline: 0.875rem;
+}
+.temple-admin .temple-brand > div:first-child {
+  gap: 0.125rem;
+}
+.temple-admin .temple-brand > div > div:first-child {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+.temple-admin .temple-brand .font-serif {
+  font-family: inherit;
+}
+.temple-admin .temple-brand > button {
+  top: 1.25rem;
+  right: -0.625rem;
+  width: 22px;
+  height: 22px;
+  color: var(--temple-green);
+}
+.temple-admin .temple-nav {
+  flex: 0 1 auto;
+  padding: 0.75rem 0.375rem;
+}
+.temple-admin[data-nav-expanded="true"] .temple-nav {
+  padding-inline: 0.75rem;
+}
+.temple-admin .temple-nav button {
+  min-height: 36px;
+  color: #f2f8f4;
+  border-radius: 12px;
+  padding: 0.125rem;
+  font-size: 0.8125rem;
+  transition:
+    background-color 180ms,
+    color 180ms;
+}
+.temple-admin .temple-nav button > div:not(.temple-nav-indicator) {
+  width: 30px;
+  height: 30px;
+  margin-left: 0;
+  background: rgb(255 255 255 / 8%);
+}
+.temple-admin .temple-nav button svg {
+  color: currentColor;
+  width: 16px;
+}
+.temple-admin .temple-nav button > span:not(.temple-alert-badge) {
+  letter-spacing: 0;
+  margin-left: 0.375rem;
+}
+.temple-admin .temple-nav button > .temple-alert-badge {
+  margin-right: 0.25rem;
+}
+.temple-admin[data-section="cctv"] .temple-nav button[data-section="dashboard"],
+.temple-admin .temple-nav button[aria-current="page"] {
+  background: var(--temple-gold);
+  color: var(--temple-dark);
+}
+.temple-admin .temple-nav button[aria-current="page"] {
+  box-shadow: none;
+}
+.temple-admin[data-section="cctv"] .temple-nav button[aria-current="page"] {
+  background: #1a4938;
+  border-color: #4b6249;
+  color: #fff;
+  box-shadow: none;
+}
+.temple-admin .temple-nav .temple-nav-indicator {
+  background: var(--temple-gold);
+  width: 3px;
+  height: 19px;
+  box-shadow: none;
+}
+.temple-admin .temple-alert-badge {
+  background: #bf241c;
+}
+.temple-sidebar-photo {
+  flex: 1 0 0;
+  min-height: 0;
+  background:
+    linear-gradient(var(--temple-dark), transparent 35%, transparent 78%, var(--temple-dark)),
+    url("/temples/tiruvannamalai/tower.jpg") center 60% / cover;
+}
+.temple-admin .temple-profile {
+  gap: 0.375rem;
+  padding: 0.625rem 0.375rem;
+}
+.temple-admin[data-nav-expanded="true"] .temple-profile {
+  padding-inline: 0.75rem;
+}
+.temple-admin .temple-profile > div {
+  background: var(--temple-green);
+  border-radius: 12px;
+  cursor: default;
+}
+.temple-admin .temple-user-initial {
+  background: var(--temple-gold);
+  color: var(--temple-dark);
+}
+.temple-admin .temple-profile > button {
+  justify-content: center;
+  gap: 0.35rem;
+  color: #f2f8f4;
+}
+.temple-admin .temple-profile > button span {
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+}
+.temple-admin .temple-topbar {
+  left: var(--sidebar-width);
+  height: var(--topbar-height);
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 0.375rem;
+  padding-inline: 0.75rem;
+  background: var(--temple-bg);
+  border-color: var(--temple-border);
+}
+.temple-admin .temple-topbar-group {
+  gap: 0.375rem;
+  min-width: 0;
+}
+.temple-admin .temple-topbar-selectors {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.temple-admin .temple-topbar-filter {
+  display: block;
+}
+.temple-admin .temple-topbar-filter > button {
+  max-width: 100%;
+  padding-inline: 0.625rem;
+  gap: 0.375rem;
+  background: var(--temple-surface);
+  border-color: var(--temple-border);
+  box-shadow: var(--temple-shadow);
+}
+.temple-admin .temple-topbar-filter > button > svg:first-child,
+.temple-admin .temple-topbar-weather svg {
+  color: #945800;
+}
+.temple-admin .temple-topbar-live {
+  color: #126239;
+  background: #dff5dc;
+}
+.temple-admin .temple-topbar-avatar {
+  background: var(--temple-green);
+  width: 34px;
+  height: 34px;
+  cursor: default;
+}
+.temple-admin .temple-content {
+  margin-left: var(--sidebar-width);
+  padding-top: var(--topbar-height);
+}
+.temple-admin .temple-content-inner {
+  padding: 0.75rem;
+}
+.temple-admin .temple-switch-loading {
+  left: var(--sidebar-width);
+  top: var(--topbar-height);
+}
+@media (max-width: 767px) {
+  .temple-admin .temple-topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-items: start;
+  }
+  .temple-admin .temple-topbar-selectors {
+    display: contents;
+  }
+  .temple-admin .temple-topbar-live {
+    display: none;
+  }
+  .temple-admin .temple-topbar-temple {
+    grid-row: 2;
+    grid-column: 1;
+    min-width: 0;
+  }
+  .temple-admin .temple-topbar-filter > button > span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .temple-admin .temple-topbar-filter > button > svg {
+    flex-shrink: 0;
+  }
+  .temple-admin .temple-topbar-group:last-child {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: end;
+  }
+  .temple-admin .temple-topbar-filter {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .temple-admin .temple-topbar-filter > div {
+    width: min(15rem, calc(100vw - 132px));
+  }
+  .temple-admin .temple-topbar-filter:nth-child(3) > div {
+    left: auto;
+    right: 0;
+  }
+}
+@media (min-width: 768px) {
+  .temple-admin {
+    --topbar-height: 60px;
+    --sidebar-width: 64px;
+  }
+  .temple-admin[data-nav-expanded="true"] {
+    --sidebar-width: 216px;
+  }
+  .temple-admin .temple-topbar {
+    flex-wrap: nowrap;
+    padding-inline: 1rem;
+  }
+  .temple-admin .temple-topbar-group {
+    gap: 0.625rem;
+  }
+  .temple-admin .temple-content {
+    margin-left: 0;
+  }
+  .temple-admin .temple-content-inner {
+    padding: 0.875rem 1rem 1.25rem;
+  }
+}
+
+.temple-admin .temple-nav button:hover:not([aria-current="page"]):not([data-section="dashboard"]) {
+  background: #164336;
+}
+.temple-admin .temple-page-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 90px;
+  margin-bottom: 1rem;
+  padding: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, var(--card) 30%, rgb(255 252 247 / 97%) 55%, rgb(255 252 247 / 35%)),
+    url("/temples/tiruvannamalai/gopurams-from-hill.jpg") right 54% / 65% auto no-repeat;
+  box-shadow: var(--temple-shadow);
+}
+.temple-page-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  color: #895407;
+  background: #faeac9;
+  border-radius: 12px;
+}
+.temple-admin .temple-dashboard-hero {
+  background:
+    linear-gradient(100deg, #08271f 25%, rgb(8 39 31 / 95%) 55%, rgb(8 39 31 / 87%)),
+    url("/temples/tiruvannamalai/gopurams-from-hill.jpg") right 53% / 70% auto no-repeat;
+  box-shadow: var(--temple-shadow);
+}
+.temple-admin :is(.kpi-card, .glass-card) {
+  background: var(--card);
+  border-color: var(--border);
+  border-radius: 14px;
+  box-shadow: var(--temple-shadow);
+  backdrop-filter: none;
+}
+.temple-admin :is(.kpi-card, .glass-card):hover {
+  transform: none;
+}
+.temple-admin .temple-workspace :is(.temple-panel, [data-slot="card"]) {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--temple-shadow);
+  backdrop-filter: none;
+}
+.temple-admin :is(button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .temple-admin *,
+  .temple-admin *::before,
+  .temple-admin *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+.temple-admin :is(.temple-nav, .temple-profile) button:focus-visible {
+  outline-color: var(--temple-gold);
+}

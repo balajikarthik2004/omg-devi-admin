@@ -504,32 +504,6 @@ export const STAFF = [
   },
 ];
 
-<<<<<<< HEAD
-export const ZONES = [
-  { name: "Main Gopuram Entry", capacity: 500, current: 380, status: "BUSY", action: "Open Lane" },
-  { name: "Queue Lane A", capacity: 800, current: 620, status: "BUSY", action: "Extend Lane" },
-  { name: "Queue Lane B", capacity: 800, current: 540, status: "MODERATE", action: "Monitor" },
-  { name: "Inner Sanctum", capacity: 200, current: 145, status: "MODERATE", action: "Monitor" },
-  { name: "Prasad Counter", capacity: 150, current: 90, status: "NORMAL", action: "—" },
-  { name: "Parking Lot A", capacity: 800, current: 640, status: "BUSY", action: "Overflow Alert" },
-  { name: "Parking Lot B", capacity: 500, current: 340, status: "MODERATE", action: "Monitor" },
-  { name: "Emergency Exit", capacity: 0, current: 0, status: "CLEAR", action: "—" },
-=======
-export const CCTV_CAMERAS = [
-  { id: "CAM-P01", name: "Main Gopuram Entrance", count: 187, type: "people", status: "BUSY" },
-  { id: "CAM-P02", name: "Queue Lane A", count: 220, type: "people", status: "CROWDED" },
-  { id: "CAM-P03", name: "Queue Lane B", count: 178, type: "people", status: "BUSY" },
-  { id: "CAM-P04", name: "Inner Sanctum Approach", count: 145, type: "people", status: "NORMAL" },
-  { id: "CAM-P05", name: "Prasad Counter", count: 62, type: "people", status: "NORMAL" },
-  { id: "CAM-P06", name: "Parking Lot A", count: 640, type: "vehicles", status: "BUSY" },
-  { id: "CAM-P07", name: "North Gate", count: 94, type: "people", status: "NORMAL" },
-  { id: "CAM-P08", name: "South Gate", count: 78, type: "people", status: "NORMAL" },
-  { id: "CAM-P09", name: "VIP Darshan Lane", count: 34, type: "people", status: "NORMAL" },
-  { id: "CAM-P10", name: "Emergency Exit (North)", count: 0, type: "people", status: "CLEAR" },
-  { id: "CAM-P11", name: "Temple Office Area", count: 12, type: "people", status: "NORMAL" },
-  { id: "CAM-P12", name: "Footwear Counter", count: 89, type: "people", status: "NORMAL" },
-];
-
 export interface ZoneItem {
   id: string;
   name: string;
@@ -727,7 +701,6 @@ export const ZONES: ZoneItem[] = [
     camId: "CAM-12",
     waitTime: "Unobstructed",
   },
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
 ];
 
 export const POOJAS = [

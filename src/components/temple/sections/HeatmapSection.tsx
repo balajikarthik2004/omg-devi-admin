@@ -154,7 +154,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
       {/* ========================================================
           1. STAT CARDS ROW (OMG TEMPLE BRAND THEME)
           ======================================================== */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 min-w-0 max-w-full">
+      <div className="grid grid-cols-1 min-[420px]:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 min-w-0 max-w-full">
         {/* Card 1: Inside Now — Sacred Saffron */}
         <StatCard
           icon={Users}
@@ -173,9 +173,9 @@ export function HeatmapSection({ temple }: { temple?: any }) {
           icon={UsersRound}
           label="In Queues"
           value={queues.toLocaleString("en-IN")}
-          color="text-[#131a72]"
-          bgTint="bg-[#131a72]/10 text-[#131a72] border border-[#131a72]/20"
-          barGradient="#131a72"
+          color="text-primary"
+          bgTint="bg-primary/10 text-primary border border-primary/20"
+          barGradient="#0b3026"
           trend={{ up: false, text: "-5%" }}
           sub="54% queue load"
           progress={Math.round((queues / 8000) * 100)}
@@ -199,9 +199,9 @@ export function HeatmapSection({ temple }: { temple?: any }) {
           icon={Activity}
           label="Total on Premises"
           value={(inside + queues + parking).toLocaleString("en-IN")}
-          color="text-[#E22E28]"
-          bgTint="bg-[#E22E28]/10 text-[#E22E28] border border-[#E22E28]/20"
-          barGradient="linear-gradient(90deg, #131a72 0%, #E22E28 100%)"
+          color="text-[#E22E26]"
+          bgTint="bg-[#E22E26]/10 text-[#E22E26] border border-[#E22E26]/20"
+          barGradient="linear-gradient(90deg, #0b3026 0%, #E22E26 100%)"
           trend={{ up: true, text: "+15%" }}
           sub="Peak in 1 hr"
           progress={Math.round(((inside + queues + parking) / 33000) * 100)}
@@ -213,7 +213,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
           ======================================================== */}
       <div className="grid gap-5 lg:grid-cols-[1fr_330px] min-w-0 max-w-full items-stretch">
         {/* Heatmap Map Area */}
-        <div className="flex flex-col justify-between min-w-0 max-w-full rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl p-4 sm:p-5 shadow-sm transition-all hover:shadow-md h-full">
+        <div className="temple-panel flex flex-col justify-between min-w-0 max-w-full rounded-3xl border border-border/50 bg-white/70 p-4 sm:p-5 shadow-sm transition-all h-full">
           {/* Header Controls */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
@@ -253,7 +253,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
               <button
                 type="button"
                 onClick={() => setFullScreen(true)}
-                className="flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-bold text-foreground shadow-xs hover:shadow-sm border border-border/60 hover:bg-muted/40 transition-all cursor-pointer"
+                className="temple-panel flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-bold text-foreground shadow-xs hover:shadow-sm border border-border/60 hover:bg-muted/40 transition-all cursor-pointer"
               >
                 <Maximize2 size={13} className="text-primary" />
                 <span>Full View</span>
@@ -274,7 +274,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
         {/* Analytics & Prediction Sidebar */}
         <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full h-full">
           {/* AI Crowd Forecast */}
-          <div className="rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl p-5 lg:p-6 shadow-sm transition-all hover:shadow-md min-w-0 max-w-full">
+          <div className="temple-panel rounded-3xl border border-border/50 bg-white/70 p-5 lg:p-6 shadow-sm transition-all min-w-0 max-w-full">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                 <Sparkles size={12} className="text-primary" /> AI Crowd Forecast (2 Hours)
@@ -339,7 +339,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
           </div>
 
           {/* AI Recommended Strategy */}
-          <div className="rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl p-5 lg:p-6 shadow-sm flex-1 flex flex-col justify-between transition-all hover:shadow-md min-w-0 max-w-full">
+          <div className="temple-panel rounded-3xl border border-border/50 bg-white/70 p-5 lg:p-6 shadow-sm flex-1 flex flex-col justify-between transition-all min-w-0 max-w-full">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground">
@@ -402,7 +402,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
       {/* ========================================================
           3. ZONE BREAKDOWN TABLE (ENHANCED & ACTIONABLE)
           ======================================================== */}
-      <div ref={tableRef} className="w-full max-w-full overflow-hidden rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl shadow-sm transition-all hover:shadow-md">
+      <div ref={tableRef} className="temple-panel w-full max-w-full overflow-hidden rounded-3xl border border-border/50 bg-white/70 shadow-sm transition-all">
         {/* Table Top Toolbar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5 gap-4">
           <div className="flex items-center gap-3">
@@ -562,7 +562,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
                           <div className="text-[11px] text-muted-foreground font-medium flex items-center gap-2 mt-0.5">
                             <span>{z.subtitle}</span>
                             {z.camId && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-secondary bg-secondary-tint px-1.5 py-0.2 rounded border border-secondary/20">
                                 <Video size={10} /> {z.camId}
                               </span>
                             )}
@@ -593,7 +593,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
                                 pct >= 85
                                   ? "#991B1B"
                                   : pct >= 70
-                                  ? "#E22E28"
+                                  ? "#E22E26"
                                   : pct >= 45
                                   ? "#F59E0B"
                                   : "#10B981",
@@ -620,7 +620,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
                               pct >= 85
                                 ? "#991B1B"
                                 : pct >= 70
-                                ? "#E22E28"
+                                ? "#E22E26"
                                 : pct >= 45
                                 ? "#F59E0B"
                                 : "#10B981",

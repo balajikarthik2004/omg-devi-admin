@@ -3,16 +3,23 @@ import {
   Activity,
   AlertTriangle,
   Car,
-  Columns2,
+  LayoutGrid,
+  List,
   Search,
   Users,
   UsersRound,
-  Video,
   ScanFace,
 } from "lucide-react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { occupancy, ZONES, type Camera, type CctvAlert, type Zone } from "@/lib/cctv-service";
+import {
+  occupancy,
+  ZONES,
+  type Camera,
+  type CameraStatus,
+  type CctvAlert,
+  type Zone,
+} from "@/lib/cctv-service";
 import { field, panel } from "./presentation";
 import { CameraTile } from "./CameraTile";
 
@@ -23,18 +30,12 @@ export function CctvTabs() {
   return (
     <TabsList
       aria-label="CCTV view"
-      className="h-auto w-fit max-w-full flex-wrap justify-start gap-1 rounded-xl border border-border bg-card p-1"
+      className="cctv-view-tabs h-auto w-fit max-w-full flex-wrap justify-start gap-2 p-0"
     >
-      <TabsTrigger
-        value="live"
-        className="gap-1.5 px-2.5 py-1.5 text-xs font-semibold sm:px-3 sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-      >
-        <Video size={16} /> Live Grid
+      <TabsTrigger value="live" className="gap-2 px-3 py-2 text-xs font-bold">
+        <LayoutGrid size={16} /> Live Grid
       </TabsTrigger>
-      <TabsTrigger
-        value="search"
-        className="gap-1.5 px-2.5 py-1.5 text-xs font-semibold sm:px-3 sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-      >
+      <TabsTrigger value="search" className="gap-2 px-3 py-2 text-xs font-bold">
         <ScanFace size={16} /> AI Person Search
       </TabsTrigger>
     </TabsList>
@@ -82,14 +83,14 @@ export function CctvKpiStrip({
       value: total(people, current),
       trend: change(total(people, current) - total(people, previous)),
       icon: Users,
-      tone: "bg-secondary-tint text-secondary",
+      tone: "gold",
     },
     {
       label: "In Queues",
       value: total(queues, current),
       trend: change(total(queues, current) - total(queues, previous)),
       icon: UsersRound,
-      tone: "bg-amber-50 text-amber-800",
+      tone: "gold",
     },
     {
       label: "Vehicles",
@@ -97,51 +98,48 @@ export function CctvKpiStrip({
       value: total(vehicles, current),
       trend: change(total(vehicles, current) - total(vehicles, previous)),
       icon: Car,
-      tone: "bg-secondary-tint text-secondary",
+      tone: "green",
     },
     {
       label: "Anomalies",
       value: active.length,
       trend: active.filter((alert) => alert.timestamp >= cutoff).length + " new in 3 min",
       icon: AlertTriangle,
-      tone: "bg-red-50 text-primary",
+      tone: "red",
     },
     {
       label: "Avg Density",
       value: density + "%",
       trend: change(density - weightedDensity(people, previous), " pp"),
       icon: Activity,
-      tone: "bg-emerald-50 text-emerald-800",
+      tone: "green",
     },
   ];
   return (
-    <section
-      aria-label="Camera metrics"
-      className="grid auto-cols-[148px] grid-flow-col gap-2.5 overflow-x-auto pb-1 min-[1000px]:auto-cols-fr"
-    >
+    <section aria-label="Camera metrics" className="cctv-metrics">
       {kpis.map(({ label, title, value, trend, icon: Icon, tone }) =>
         loading ? (
-          <Skeleton key={label} className="h-24 rounded-xl" />
+          <Skeleton key={label} className="h-[5.25rem] rounded-xl" />
         ) : (
-          <div key={label} title={title} className={panel + " min-h-24 min-w-0 p-3"}>
-            <div className="flex items-center gap-2">
-              <span className={"grid size-7 shrink-0 place-items-center rounded-md " + tone}>
-                <Icon size={15} />
-              </span>
-              <span className="text-xs font-semibold text-muted-foreground">{label}</span>
+          <div key={label} title={title} data-tone={tone} className="cctv-metric">
+            <span className="cctv-metric-icon" aria-hidden="true">
+              <Icon size={21} />
+            </span>
+            <div className="min-w-0">
+              <div className="text-xs font-bold">{label}</div>
+              <div className="text-xl leading-tight font-extrabold tabular-nums">
+                {value.toLocaleString("en-IN")}
+              </div>
+              <div className="text-[11px] font-medium text-muted-foreground">{trend}</div>
+              {label === "Avg Density" && (
+                <progress
+                  aria-label="Average density"
+                  value={density}
+                  max={100}
+                  className="cctv-progress mt-1"
+                />
+              )}
             </div>
-            <div className="mt-1 text-xl font-extrabold tabular-nums">
-              {value.toLocaleString("en-IN")}
-            </div>
-            <div className="text-[10px] font-medium text-muted-foreground">{trend}</div>
-            {label === "Avg Density" && (
-              <progress
-                aria-label="Average density"
-                value={density}
-                max={100}
-                className="cctv-progress mt-1"
-              />
-            )}
           </div>
         ),
       )}
@@ -158,8 +156,12 @@ export function CctvToolbar({
   searchRef,
   sort,
   setSort,
+  status,
+  setStatus,
   size,
   setSize,
+  view,
+  setView,
 }: {
   cameras: Camera[];
   zone: Zone | "All";
@@ -169,11 +171,15 @@ export function CctvToolbar({
   searchRef: Ref<HTMLInputElement>;
   sort: CameraSort;
   setSort: (value: CameraSort) => void;
+  status: CameraStatus | "All";
+  setStatus: (value: CameraStatus | "All") => void;
   size: GridSize;
   setSize: (value: GridSize) => void;
+  view: "grid" | "list";
+  setView: (value: "grid" | "list") => void;
 }) {
   return (
-    <div className={panel + " flex flex-wrap items-center gap-3 p-3"}>
+    <div className="cctv-toolbar">
       <div role="group" aria-label="Camera zones" className="flex flex-wrap gap-1.5">
         {(["All", ...ZONES] as const).map((item) => (
           <button
@@ -181,18 +187,20 @@ export function CctvToolbar({
             type="button"
             aria-pressed={zone === item}
             onClick={() => setZone(item)}
-            className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-2 text-xs font-semibold hover:bg-muted aria-pressed:border-secondary/20 aria-pressed:bg-secondary-tint aria-pressed:text-secondary"
+            className="cctv-zone"
           >
             {item}{" "}
-            <span className="rounded bg-black/5 px-1 tabular-nums">
+            <span className="tabular-nums">
+              (
               {item === "All"
                 ? cameras.length
                 : cameras.filter((camera) => camera.zone === item).length}
+              )
             </span>
           </button>
         ))}
       </div>
-      <div className="flex min-w-0 flex-auto flex-wrap items-center gap-2 min-[1650px]:flex-initial">
+      <div className="cctv-toolbar-controls flex min-w-0 flex-wrap items-center gap-1.5">
         <label className="relative min-w-28 flex-1">
           <Search
             size={14}
@@ -204,37 +212,63 @@ export function CctvToolbar({
             placeholder="Search cameras"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className={field + " w-full pl-8 text-xs"}
+            className={field + " w-full pl-8"}
           />
         </label>
+        <select
+          aria-label="Filter by camera severity"
+          value={status}
+          onChange={(event) => setStatus(event.target.value as CameraStatus | "All")}
+          className={field}
+        >
+          <option value="All">Severity</option>
+          <option value="alert">Alert</option>
+          <option value="crowded">Crowded</option>
+          <option value="busy">Busy</option>
+          <option value="normal">Normal</option>
+          <option value="clear">Clear</option>
+          <option value="offline">Offline</option>
+        </select>
         <select
           aria-label="Sort cameras"
           value={sort}
           onChange={(e) => setSort(e.target.value as CameraSort)}
-          className={field + " text-xs"}
+          className={field}
         >
-          <option>Severity</option>
+          <option value="Severity">Priority</option>
           <option>Name</option>
           <option>Count</option>
         </select>
-        <div
-          role="group"
-          aria-label="Grid columns"
-          className="hidden items-center rounded-lg border border-border bg-muted/50 p-0.5 md:flex"
-        >
-          <Columns2 size={14} className="mx-1.5 text-muted-foreground" />
-          {([2, 3, 4] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-label={value + " columns"}
-              aria-pressed={value === size}
-              onClick={() => setSize(value)}
-              className="size-7 rounded text-xs font-semibold aria-pressed:bg-white aria-pressed:text-secondary aria-pressed:shadow-sm"
-            >
-              {value}
-            </button>
-          ))}
+        <div className="cctv-view-switch" role="group" aria-label="Camera layout">
+          <button
+            type="button"
+            aria-label="Grid view"
+            aria-pressed={view === "grid"}
+            onClick={() => setView("grid")}
+          >
+            <LayoutGrid size={15} />
+          </button>
+          <button
+            type="button"
+            aria-label="List view"
+            aria-pressed={view === "list"}
+            onClick={() => setView("list")}
+          >
+            <List size={16} />
+          </button>
+        </div>
+        <div role="group" aria-label="Grid columns" className="cctv-grid-size">
+          <select
+            className={field}
+            aria-label="Grid columns"
+            value={size}
+            disabled={view === "list"}
+            onChange={(event) => setSize(Number(event.target.value) as GridSize)}
+          >
+            <option value={2}>2 columns</option>
+            <option value={3}>3 columns</option>
+            <option value={4}>4 columns</option>
+          </select>
         </div>
       </div>
     </div>
@@ -244,6 +278,7 @@ export function CctvToolbar({
 export function CameraGrid({
   cameras,
   size,
+  view,
   now,
   loading,
   highlight,
@@ -252,6 +287,7 @@ export function CameraGrid({
 }: {
   cameras: Camera[];
   size: GridSize;
+  view: "grid" | "list";
   now: number;
   loading: boolean;
   highlight: string | null;
@@ -259,7 +295,13 @@ export function CameraGrid({
   onOpen: (id: string, playback?: boolean) => void;
 }) {
   return (
-    <section aria-label="Camera grid" aria-busy={loading} data-columns={size} className="cctv-grid">
+    <section
+      aria-label={view === "grid" ? "Camera grid" : "Camera list"}
+      aria-busy={loading}
+      data-columns={size}
+      data-view={view}
+      className="cctv-grid"
+    >
       {loading ? (
         Array.from({ length: 6 }, (_, i) => (
           <Skeleton key={i} className="aspect-[4/3] rounded-xl" />

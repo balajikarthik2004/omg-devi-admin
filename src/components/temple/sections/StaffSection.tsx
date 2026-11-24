@@ -83,14 +83,14 @@ export function StaffSection() {
           icon={Users}
           label="Total Assigned"
           value={STAFF.length}
-          color="text-indigo-600"
-          bgTint="bg-indigo-50 text-indigo-600 border border-indigo-100"
+          color="text-secondary"
+          bgTint="bg-secondary-tint text-secondary border border-secondary/20"
           sub={`${onDuty} active · ${onBreak} on break`}
           trend={{ up: true, text: "Full roster" }}
         />
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md relative flex flex-col h-full">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all relative flex flex-col h-full">
           <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-sm font-extrabold text-foreground tracking-tight">Staff Positions — Temple Floor</h3>
@@ -111,7 +111,7 @@ export function StaffSection() {
               </span>
             </div>
           </div>
-          <div className="relative rounded-2xl bg-white border border-border/60 overflow-hidden shadow-sm">
+          <div className="temple-panel relative rounded-2xl bg-white border border-border/60 overflow-hidden shadow-sm">
             {/* Generated Temple Blueprint Image */}
             <img 
               src="/temple_blueprint.png" 
@@ -201,7 +201,7 @@ export function StaffSection() {
           )}
         </div>
         {/* Quick Actions */}
-        <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md flex flex-col h-full">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all flex flex-col h-full">
           <div className="mb-8">
             <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2.5">
               <div className="p-1.5 rounded-md bg-primary/10">
@@ -232,7 +232,7 @@ export function StaffSection() {
         </div>
       </div>
       {/* Roster Table */}
-      <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+      <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 shadow-sm overflow-hidden transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5 gap-4">
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2.5">
             <div className="p-1.5 rounded-md bg-primary/10">

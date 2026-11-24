@@ -29,12 +29,14 @@ export function CameraFeed({
   camera,
   compact = false,
   focus = false,
+  tile = false,
   playback,
   videoRef,
 }: {
   camera: Camera;
   compact?: boolean;
   focus?: boolean;
+  tile?: boolean;
   playback?: number | null;
   videoRef: RefObject<HTMLVideoElement | null>;
 }) {
@@ -58,7 +60,12 @@ export function CameraFeed({
     if (videoRef.current) seekDemo(videoRef.current, playback);
   }, [playback, videoRef]);
   return (
-    <div className="relative aspect-video overflow-hidden rounded-lg bg-slate-950 text-white">
+    <div
+      className={
+        (tile ? "cctv-tile-feed " : "") +
+        "relative aspect-video overflow-hidden rounded-lg bg-slate-950 text-white"
+      }
+    >
       <img
         src={camera.poster}
         alt=""
@@ -87,6 +94,7 @@ export function CameraFeed({
       )}
       <div aria-hidden="true" className="cctv-feed-shade pointer-events-none absolute inset-0" />
       {camera.online &&
+        !tile &&
         playback == null &&
         Array.from({ length: camera.count ? 3 : 0 }, (_, index) => {
           const width = 9 + index * 2;
@@ -113,8 +121,11 @@ export function CameraFeed({
             </div>
           );
         })}
-      <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-wrap justify-between gap-1 p-2 text-[9px] font-bold uppercase">
-        <span className="flex items-center gap-1.5 rounded-md bg-black/75 px-2 py-1">
+      <div className="cctv-feed-badges pointer-events-none absolute inset-x-0 top-0 flex flex-wrap justify-between gap-1 p-2 text-[9px] font-bold uppercase">
+        <span
+          data-online={camera.online && playback == null}
+          className="cctv-feed-signal flex items-center gap-1.5 rounded-md bg-black/75 px-2 py-1"
+        >
           <span
             className={
               "size-1.5 rounded-full " +
@@ -123,11 +134,17 @@ export function CameraFeed({
                 : "bg-slate-400")
             }
           />
-          {playback != null ? "Playback" : camera.online ? "LIVE" : "No signal"}
+          {playback != null ? "Playback" : camera.online ? "Live" : "Offline"}
         </span>
-        <span className={"ml-auto rounded-md px-2 py-1 " + statusStyle[camera.status].pill}>
-          {camera.status}
-        </span>
+        {(!tile || ["alert", "busy", "crowded"].includes(camera.status)) && (
+          <span
+            className={
+              "cctv-feed-severity ml-auto rounded-md px-2 py-1 " + statusStyle[camera.status].pill
+            }
+          >
+            {camera.status}
+          </span>
+        )}
       </div>
       {!focus && camera.online && (
         <div className="pointer-events-none absolute inset-x-2 top-10 flex flex-wrap gap-x-2 gap-y-1 rounded bg-black/80 px-2 py-1 text-[9px] font-semibold opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
@@ -220,13 +237,8 @@ export function CameraTile({
       id={"tile-" + camera.id}
       data-status={camera.status}
       className={
-        "cctv-tile group relative min-w-0 scroll-mt-24 rounded-xl border bg-slate-900 p-2 text-white shadow-sm " +
-        (camera.status === "alert"
-          ? " cctv-tile-alert border-primary"
-          : camera.status === "crowded"
-            ? " border-status-crowded/55"
-            : " border-secondary/50") +
-        (highlighted ? " ring-2 ring-secondary ring-offset-2" : "")
+        "cctv-tile group relative min-w-0 scroll-mt-28 " +
+        (highlighted ? "ring-2 ring-offset-2" : "")
       }
     >
       {flashKey !== undefined && (
@@ -244,12 +256,20 @@ export function CameraTile({
           onClick={() => onOpen(camera.id)}
           className="block w-full rounded-lg text-left"
         >
-          <CameraFeed camera={camera} compact={compact} videoRef={video} />
+          <CameraFeed camera={camera} compact={compact} videoRef={video} tile />
+        </button>
+        <button
+          type="button"
+          aria-label={"Expand " + camera.id}
+          title="Expand"
+          onClick={() => onOpen(camera.id)}
+          className="cctv-tile-expand absolute right-2 top-2 grid size-6 place-items-center rounded-md bg-black/75 text-white hover:bg-black"
+        >
+          <Expand size={14} />
         </button>
         <div className="cctv-tile-actions absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 rounded-lg bg-black/85 p-0.5 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
           {(
             [
-              [Expand, "Expand", () => onOpen(camera.id)],
               [CameraIcon, "Snapshot", () => void saveSnapshot(camera, video.current)],
               [Play, "Playback", () => onOpen(camera.id, true)],
             ] as const
@@ -267,18 +287,16 @@ export function CameraTile({
           ))}
         </div>
       </div>
-      <div className="space-y-2 px-1 pt-2 pb-1">
+      <div className="cctv-tile-details space-y-1">
         <div className="flex flex-wrap items-center justify-between gap-x-1 gap-y-0.5">
           <div className="flex min-w-0 items-center gap-1.5">
-            <Icon size={15} className="shrink-0 text-indigo-200" />
-            <strong className="text-sm tabular-nums">{camera.count.toLocaleString("en-IN")}</strong>
-            <span className="truncate text-xs text-slate-300">
-              / {camera.capacity} {camera.countType}
-            </span>
+            <Icon size={14} className="shrink-0" />
+            <strong className="text-xs tabular-nums">
+              {camera.count.toLocaleString("en-IN")} / {camera.capacity.toLocaleString("en-IN")}{" "}
+              {camera.countType}
+            </strong>
           </div>
-          <span className="text-[10px] font-semibold tabular-nums text-slate-300">
-            {camera.density}%
-          </span>
+          <span className="text-xs font-bold tabular-nums">{camera.density}%</span>
         </div>
         <div
           role="meter"
@@ -286,20 +304,22 @@ export function CameraTile({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={camera.density}
-          className="h-1.5 overflow-hidden rounded-full bg-white/15"
+          className="cctv-density-bar h-1 overflow-hidden rounded-full"
         >
           <div
             className={"h-full rounded-full " + statusStyle[camera.status].bar}
             style={{ width: camera.density + "%" }}
           />
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] font-medium text-slate-300">
+        <div className="cctv-tile-telemetry flex flex-wrap items-center justify-between gap-1 text-[10px] font-medium">
           <time
-            dateTime={new Date(camera.online ? now : camera.lastSeen).toISOString()}
-            title={camera.online ? undefined : absoluteTime(camera.lastSeen)}
+            dateTime={new Date(camera.lastSeen).toISOString()}
+            title={absoluteTime(camera.lastSeen)}
             className="tabular-nums"
           >
-            {camera.online ? clockTime(now) : "Last seen " + relativeTime(camera.lastSeen, now)}
+            {camera.online
+              ? clockTime(camera.lastSeen)
+              : "Last seen " + relativeTime(camera.lastSeen, now)}
           </time>
           {camera.online ? (
             <Sparkline camera={camera} />
@@ -308,7 +328,7 @@ export function CameraTile({
               type="button"
               disabled={retrying}
               onClick={() => void reconnect()}
-              className="flex items-center gap-1 rounded text-xs font-semibold text-indigo-200 disabled:opacity-60"
+              className="flex items-center gap-1 rounded text-[11px] font-semibold disabled:opacity-60"
             >
               <RotateCw size={12} /> {retrying ? "Connecting…" : "Retry"}
             </button>

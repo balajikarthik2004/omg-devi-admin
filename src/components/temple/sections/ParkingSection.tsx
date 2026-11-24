@@ -114,7 +114,7 @@ export function ParkingSection() {
   return (
     <div className="space-y-8">
       {/* ── Top KPI Stat Cards ── */}
-      <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+      <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-6 lg:grid-cols-4">
         <StatCard
           icon={Bike}
           label="Two-Wheelers"
@@ -131,8 +131,8 @@ export function ParkingSection() {
           label="Four-Wheelers"
           value={total4W.toLocaleString()}
           valueSuffix={`/ ${totalCap4W.toLocaleString()}`}
-          color="text-indigo-600"
-          bgTint="bg-indigo-50 text-indigo-600 border border-indigo-100"
+          color="text-secondary"
+          bgTint="bg-secondary-tint text-secondary border border-secondary/20"
           progress={pct4WTotal}
           sub={`${pct4WTotal}% occupied`}
           trend={{ up: pct4WTotal > 70, text: `${pct4WTotal}%` }}
@@ -168,7 +168,7 @@ export function ParkingSection() {
             return (
               <div
                 key={l.name}
-                className="rounded-2xl border border-border/40 bg-white/80 p-5 shadow-sm"
+                className="temple-panel rounded-2xl border border-border/40 bg-white/80 p-5 shadow-sm"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-[14px] font-bold text-foreground">
@@ -232,7 +232,7 @@ export function ParkingSection() {
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
 
         {/* Vehicle Flow Chart */}
-        <div className="rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl p-6 lg:p-8 shadow-md">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/70 p-6 lg:p-8 shadow-md">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -249,8 +249,8 @@ export function ParkingSection() {
               <div className="flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-bold text-amber-700">
                 <div className="h-2 w-2 rounded-full bg-amber-500" /> Entry
               </div>
-              <div className="flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-[10px] font-bold text-indigo-700">
-                <div className="h-2 w-2 rounded-full bg-indigo-500" /> Exit
+              <div className="flex items-center gap-1.5 rounded-full border border-secondary/30 bg-secondary-tint px-3 py-1 text-[10px] font-bold text-primary">
+                <div className="h-2 w-2 rounded-full bg-secondary" /> Exit
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@ export function ParkingSection() {
         </div>
 
         {/* Live Aisle Map */}
-        <div className="rounded-3xl border border-border/50 bg-white/70 backdrop-blur-xl p-6 shadow-md">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/70 p-6 shadow-md">
           <div className="mb-4 flex items-center gap-2">
             <MapPin size={14} className="text-primary" />
             <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

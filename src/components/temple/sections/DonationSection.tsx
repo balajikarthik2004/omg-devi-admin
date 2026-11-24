@@ -154,8 +154,8 @@ export function DonationSection() {
           label="Digital Payments"
           value="₹82,400"
           sub="UPI & Cards · 66% of total"
-          color="text-indigo-600"
-          bgTint="bg-indigo-50 text-indigo-600 border-indigo-100/50"
+          color="text-secondary"
+          bgTint="bg-secondary-tint text-secondary border-secondary/20/50"
           trend={{ up: true, text: "+5%" }}
           progress={66}
         />
@@ -174,7 +174,7 @@ export function DonationSection() {
       {/* Chart & Fund Distribution Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Donation Trends */}
-        <div className="lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md h-full">
+        <div className="temple-panel lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all h-full">
           <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-sm font-extrabold text-foreground tracking-tight">Donation Trends</h3>
@@ -256,7 +256,7 @@ export function DonationSection() {
         </div>
 
         {/* Fund Distribution */}
-        <div className="lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md h-full">
+        <div className="temple-panel lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all h-full">
           <div className="mb-8 flex items-center justify-between">
             <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
@@ -361,7 +361,7 @@ export function DonationSection() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         
         {/* Recent Transactions */}
-        <div className="lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl shadow-sm overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
+        <div className="temple-panel lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 shadow-sm overflow-hidden transition-all h-full flex flex-col">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5 gap-4">
             <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2.5">
               <div className="p-1.5 rounded-md bg-primary/10">
@@ -428,12 +428,12 @@ export function DonationSection() {
         </div>
 
         {/* Quick Transfer Widget */}
-        <div className="lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md flex flex-col relative overflow-hidden group h-full">
+        <div className="temple-panel lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all flex flex-col relative overflow-hidden group h-full">
           {/* Decorative background glow */}
-          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-indigo-500/10 blur-[50px] transition-all group-hover:bg-indigo-500/20" />
+          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-secondary/10 blur-[50px] transition-all group-hover:bg-secondary/20" />
           
           <div className="flex items-center gap-4 mb-8 relative z-10">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-primary text-white shadow-lg shadow-indigo-500/20">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-primary text-white shadow-lg shadow-indigo-500/20">
               <ArrowRightLeft size={20} className="text-white" />
             </div>
             <div>

@@ -107,8 +107,8 @@ export function OperationsSection() {
           icon={ShieldAlert}
           label="Active Rituals"
           value={1}
-          color="text-indigo-600"
-          bgTint="bg-indigo-50 text-indigo-600 border border-indigo-100"
+          color="text-secondary"
+          bgTint="bg-secondary-tint text-secondary border border-secondary/20"
           sub="Crowd control Added"
         />
         <StatCard
@@ -123,7 +123,7 @@ export function OperationsSection() {
 
       <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
         {/* 2. Live Ritual & Event Command */}
-        <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-0 shadow-sm transition-all hover:shadow-md flex flex-col overflow-hidden h-full">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 p-0 shadow-sm transition-all flex flex-col overflow-hidden h-full">
           <div className="flex items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5">
             <div>
               <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Live Ritual Command Center</h3>
@@ -192,7 +192,7 @@ export function OperationsSection() {
                           <div className="flex shrink-0 flex-col gap-3">
                             <button
                               onClick={() => toast.success("Crowd Control Added")}
-                              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-saffron to-amber-500 px-4 py-2 text-[11px] font-extrabold tracking-wide text-white shadow-[0_4px_14px_rgba(245,158,11,0.3)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.4)] hover:-translate-y-0.5 transition-all"
+                              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-[11px] font-extrabold tracking-wide text-white shadow-[0_4px_14px_rgba(245,158,11,0.3)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.4)] hover:-translate-y-0.5 transition-all"
                             >
                               <Users size={14} /> Add Staff
                             </button>
@@ -217,7 +217,7 @@ export function OperationsSection() {
                                   toast.error("Browser blocked audio. Click to interact with the page first.");
                                 });
                               }}
-                              className="flex items-center justify-center gap-2 rounded-xl border border-white/60 bg-white/50 backdrop-blur-sm px-4 py-2 text-[11px] font-extrabold tracking-wide text-foreground hover:bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
+                              className="temple-panel flex items-center justify-center gap-2 rounded-xl border border-white/60 bg-white/50 backdrop-blur-sm px-4 py-2 text-[11px] font-extrabold tracking-wide text-foreground hover:bg-white hover:shadow-sm transition-all"
                             >
                               <Megaphone size={14} /> Announce
                             </button>
@@ -233,7 +233,7 @@ export function OperationsSection() {
         </div>
 
         {/* 3. Facility Health & Work Orders */}
-        <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-0 shadow-sm transition-all hover:shadow-md flex flex-col overflow-hidden h-full">
+        <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 p-0 shadow-sm transition-all flex flex-col overflow-hidden h-full">
           <div className="flex items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5">
             <div>
               <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Facility Maintenance Board</h3>
@@ -288,7 +288,7 @@ export function OperationsSection() {
                     <div className="mt-4 flex gap-3 border-t border-border/50 pt-4">
                       <button
                         onClick={() => dispatchJanitorial(order.id)}
-                        className="flex-1 rounded-xl border border-border/50 bg-white/50 py-2.5 text-[11px] font-bold text-foreground hover:bg-white transition-colors shadow-sm hover:shadow-md"
+                        className="temple-panel flex-1 rounded-xl border border-border/50 bg-white/50 py-2.5 text-[11px] font-bold text-foreground hover:bg-white transition-colors shadow-sm"
                       >
                         Dispatch Staff
                       </button>
@@ -308,7 +308,7 @@ export function OperationsSection() {
       </div>
 
       {/* 4. Digital Signage & Announcements */}
-      <div className="rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-0 shadow-sm transition-all hover:shadow-md flex flex-col overflow-hidden">
+      <div className="temple-panel rounded-3xl border border-border/50 bg-white/60 p-0 shadow-sm transition-all flex flex-col overflow-hidden">
         <div className="flex items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5">
           <div>
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Digital Signage Controller</h3>
@@ -330,7 +330,7 @@ export function OperationsSection() {
                 value={newText}
                 onChange={(e) => setNewText(e.target.value)}
                 placeholder="Type message to display..."
-                className="w-full resize-none rounded-2xl border border-white/60 bg-white/40 p-5 pb-12 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-inner"
+                className="temple-panel w-full resize-none rounded-2xl border border-white/60 bg-white/40 p-5 pb-12 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-inner"
                 rows={4}
               />
               <div className="absolute bottom-3 left-4 text-[10px] font-semibold text-muted-foreground">
@@ -350,7 +350,7 @@ export function OperationsSection() {
                 <button
                   onClick={handleBroadcast}
                   disabled={!newText.trim()}
-                  className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-[11px] font-extrabold tracking-wide text-white transition-all duration-300 ${newText.trim() ? "bg-gradient-to-r from-primary to-indigo-500 hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)] hover:-translate-y-0.5" : "bg-muted-foreground opacity-50 cursor-not-allowed"}`}
+                  className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-[11px] font-extrabold tracking-wide text-white transition-all duration-300 ${newText.trim() ? "bg-primary hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)] hover:-translate-y-0.5" : "bg-muted-foreground opacity-50 cursor-not-allowed"}`}
                 >
                   <Megaphone size={16} /> Broadcast Now
                 </button>

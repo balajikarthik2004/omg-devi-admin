@@ -1,12 +1,182 @@
+.cctv-command {
+  color: var(--temple-ink);
+  --color-card: var(--temple-surface);
+  --color-border: var(--temple-border);
+  --color-muted-foreground: #4c6058;
+}
 .cctv :is(button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
-.cctv-tile button:focus-visible {
-  outline-color: #f3b5b3;
+.cctv-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-height: 94px;
+  padding: 0.875rem 0.75rem 1rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--temple-bg) 24%,
+      rgb(250 247 241 / 96%) 45%,
+      rgb(250 247 241 / 18%) 100%
+    ),
+    url("/temples/tiruvannamalai/gopurams-from-hill.jpg") right 54% / 72% auto no-repeat;
 }
-.cctv-video {
-  filter: saturate(0.58) contrast(1.08);
+.cctv-hero-mark {
+  color: #9b5e0c;
+  font-family: serif;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+.cctv-command-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+}
+.cctv-view-tabs {
+  background: transparent;
+}
+.cctv-view-tabs button {
+  border: 1px solid var(--temple-border);
+  border-radius: 12px;
+  background: var(--temple-surface);
+  color: var(--temple-ink);
+  box-shadow: var(--temple-shadow);
+}
+.cctv-view-tabs button[data-state="active"] {
+  background: var(--temple-gold);
+  border-color: #ad6f0c;
+  color: var(--temple-dark);
+}
+.cctv-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+.cctv-metric {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.625rem;
+  min-height: 82px;
+  padding: 0.625rem;
+  border: 1px solid var(--temple-border);
+  border-radius: 14px;
+  background: var(--temple-surface);
+  box-shadow: var(--temple-shadow);
+}
+.cctv-metric[data-tone="green"] {
+  background: #f1f5eb;
+  --icon-bg: #ddf1df;
+  --icon-ink: #126239;
+}
+.cctv-metric[data-tone="gold"] {
+  background: #fcf6e9;
+  --icon-bg: #faeac9;
+  --icon-ink: #945800;
+}
+.cctv-metric[data-tone="red"] {
+  background: #fcf1eb;
+  --icon-bg: #fbe4dc;
+  --icon-ink: #b7211a;
+}
+.cctv-metric-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--icon-bg);
+  color: var(--icon-ink);
+}
+.cctv-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.cctv-toolbar-controls {
+  flex: 1 1 auto;
+}
+.cctv-zone,
+.cctv-toolbar-controls :is(input, select),
+.cctv-view-switch {
+  border: 1px solid var(--temple-border);
+  border-radius: 12px;
+  color: var(--temple-ink);
+  background: var(--temple-surface);
+  box-shadow: var(--temple-shadow);
+  font-size: 0.75rem;
+}
+.cctv-zone {
+  min-height: 31px;
+  padding: 0.25rem 0.55rem;
+  font-weight: 700;
+}
+.cctv-zone:hover {
+  background: #f1ece2;
+}
+.cctv-toolbar-controls :is(input, select) {
+  min-height: 32px;
+  padding-block: 0.25rem;
+}
+.cctv-toolbar-controls select {
+  padding-inline: 0.375rem;
+}
+.cctv-view-switch {
+  display: flex;
+  padding: 2px;
+}
+.cctv-view-switch button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 27px;
+  border-radius: 8px;
+}
+.cctv-zone[aria-pressed="true"],
+.cctv-view-switch button[aria-pressed="true"] {
+  background: var(--temple-green);
+  border-color: var(--temple-green);
+  color: #fff;
+}
+.cctv-grid-size {
+  display: none;
+}
+.cctv-monitor-layout {
+  display: grid;
+  align-items: start;
+  gap: 0.875rem;
+}
+.cctv-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--camera-columns, 1), minmax(0, 1fr));
+  align-items: start;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.cctv-grid[data-view="list"] {
+  --camera-columns: 1;
+}
+.cctv-tile {
+  border: 1px solid var(--temple-border);
+  border-radius: 14px;
+  background: var(--temple-surface);
+  color: var(--temple-ink);
+  box-shadow: var(--temple-shadow);
+  --tw-ring-color: var(--temple-success);
+}
+.cctv-tile-feed {
+  aspect-ratio: 2.08;
+  border-radius: 13px 13px 5px 5px;
+}
+.cctv-tile .cctv-feed-shade {
+  background: linear-gradient(180deg, rgb(0 0 0 / 25%), transparent 34%, transparent);
 }
 .cctv-feed-shade {
   background: linear-gradient(
@@ -17,49 +187,155 @@
     rgb(2 6 23 / 20%)
   );
 }
+.cctv-video {
+  filter: saturate(0.58) contrast(1.08);
+}
+.cctv-tile .cctv-video {
+  filter: none;
+}
 .cctv-track {
   box-shadow: inset 0 0 0 1px rgb(2 6 23 / 14%);
 }
-.cctv-grid {
+.cctv-tile .cctv-feed-badges > span {
+  border-radius: 999px;
+  text-transform: capitalize;
+  font-size: 0.6875rem;
+  line-height: 1;
+}
+.cctv-tile .cctv-feed-badges {
+  padding-right: 2.375rem;
+}
+.cctv-tile .cctv-feed-signal {
+  background: #343b38;
+  color: #fff;
+}
+.cctv-tile .cctv-feed-signal[data-online="true"] {
+  background: var(--temple-green);
+}
+.cctv-tile .cctv-feed-signal[data-online="true"] > span {
+  background: #38d66b;
+  animation: none;
+}
+.cctv-tile .cctv-feed-severity {
+  color: #fff;
+  background: #b9231c;
+}
+.cctv-tile[data-status="busy"] .cctv-feed-severity {
+  color: #382100;
+  background: #f6cb57;
+}
+.cctv-tile-details {
+  padding: 0.375rem 0.625rem;
+}
+.cctv-density-bar {
+  background: #e3e4dd;
+}
+.cctv-density-bar > div {
+  background: var(--temple-success);
+  transition: width 200ms;
+}
+.cctv-tile[data-status="busy"] .cctv-density-bar > div {
+  background: var(--temple-gold);
+}
+.cctv-tile:is([data-status="alert"], [data-status="crowded"]) .cctv-density-bar > div {
+  background: var(--temple-red);
+}
+.cctv-tile[data-status="offline"] .cctv-density-bar > div {
+  background: #6c7974;
+}
+.cctv-tile-telemetry {
+  color: #53655d;
+}
+.cctv-tile-telemetry svg {
+  color: var(--temple-success);
+}
+.cctv-tile :is(button):focus-visible {
+  outline-offset: -2px;
+}
+.cctv-tile button:first-child:focus-visible,
+.cctv-tile-expand:focus-visible {
+  outline-color: #fff;
+}
+.cctv-grid[data-view="list"] .cctv-tile {
   display: grid;
-  grid-template-columns: repeat(var(--camera-columns, 1), minmax(0, 1fr));
-  align-items: start;
-  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
 }
-@media (min-width: 600px) {
-  .cctv-grid {
-    --camera-columns: 2;
-  }
+.cctv-grid[data-view="list"] .cctv-tile-feed {
+  border-radius: 13px 5px 5px 13px;
 }
-@media (min-width: 768px) {
-  .cctv-grid[data-columns="3"] {
-    --camera-columns: 3;
-  }
-  .cctv-grid[data-columns="4"] {
-    --camera-columns: 4;
-  }
+.cctv-alert-region {
+  scroll-margin-top: calc(var(--topbar-height, 60px) + 0.75rem);
+}
+.cctv-alert-panel {
+  border: 1px solid var(--temple-border);
+  border-radius: 14px;
+  background: var(--temple-surface);
+  box-shadow: var(--temple-shadow);
+}
+.cctv-alert-bell {
+  color: #a2630b;
+}
+.cctv-alert-filters button {
+  background: #f1ece4;
+  color: var(--temple-ink);
+}
+.cctv-alert-filters button[aria-pressed="true"] {
+  background: var(--temple-gold);
+  color: var(--temple-dark);
+}
+.cctv-event {
+  border: 1px solid var(--temple-border);
+  border-inline-start: 3px solid var(--temple-gold);
+  border-radius: 12px;
+  padding: 0.625rem;
+  background: #fbf6ed;
+  color: var(--temple-ink);
+}
+.cctv-event[data-severity="high"] {
+  border-inline-start-color: var(--temple-red);
+  background: #fcf5f0;
+}
+.cctv-event-icon {
+  color: #945800;
+}
+.cctv-event[data-severity="high"] .cctv-event-icon {
+  color: #b9231c;
+}
+.cctv-event-actions button {
+  min-height: 28px;
+  height: auto;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: #e9f1df;
+  color: var(--temple-green);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+.cctv-event-actions button:hover {
+  background: #d8e8ce;
 }
 .cctv-progress {
   display: block;
   width: 100%;
   height: 0.375rem;
-  overflow: hidden;
   border: 0;
   border-radius: 999px;
-  background: var(--muted);
-  color: var(--secondary);
+  overflow: hidden;
+  background: #dce3da;
 }
 .cctv-progress::-webkit-progress-bar {
-  background: var(--muted);
+  background: #dce3da;
 }
 .cctv-progress::-webkit-progress-value {
-  background: var(--secondary);
+  background: var(--temple-success);
 }
 .cctv-progress::-moz-progress-bar {
-  background: var(--secondary);
+  background: var(--temple-success);
 }
 .cctv-flash {
-  box-shadow: inset 0 0 0 4px var(--primary);
+  box-shadow: inset 0 0 0 3px var(--temple-gold);
   animation: cctv-flash 2.5s ease-out both;
 }
 @keyframes cctv-flash {
@@ -71,23 +347,59 @@
     opacity: 0;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .cctv-tile-alert {
-    animation: cctv-alert 2.8s ease-in-out infinite;
-  }
-  @keyframes cctv-alert {
-    50% {
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 25%, transparent);
-    }
+@media (max-width: 419px) {
+  .cctv-metric {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .cctv-flash {
-    animation-timing-function: steps(1, end);
+@media (min-width: 768px) {
+  .cctv-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .cctv-grid {
+    --camera-columns: 2;
+  }
+  .cctv-grid[data-view="list"] .cctv-tile {
+    grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .cctv-metrics {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .cctv-monitor-layout {
+    grid-template-columns: minmax(0, 1fr) clamp(255px, 21vw, 315px);
+  }
+  .cctv-grid[data-view="grid"][data-columns="3"] {
+    --camera-columns: 3;
+  }
+  .cctv-grid[data-view="grid"][data-columns="4"] {
+    --camera-columns: 4;
+  }
+  .cctv-grid-size {
+    display: block;
+  }
+  .cctv-alert-region {
+    position: sticky;
+    top: calc(var(--topbar-height, 60px) + 0.75rem);
+  }
+  .cctv-alert-panel {
+    max-height: calc(100dvh - var(--topbar-height, 60px) - 1.5rem);
   }
 }
 @media (hover: none) {
   .cctv-tile-actions {
     opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cctv * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+  .cctv-flash {
+    animation: none;
   }
 }

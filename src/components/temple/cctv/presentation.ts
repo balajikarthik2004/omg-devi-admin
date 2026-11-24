@@ -10,7 +10,7 @@ export const statusStyle: Record<CameraStatus, { pill: string; bar: string }> = 
   normal: { pill: "bg-emerald-100 text-emerald-800", bar: "bg-status-normal" },
   busy: { pill: "bg-amber-100 text-amber-900", bar: "bg-status-busy" },
   crowded: { pill: "bg-red-100 text-red-800", bar: "bg-status-crowded" },
-  alert: { pill: "bg-primary text-primary-foreground", bar: "bg-primary" },
+  alert: { pill: "bg-destructive text-destructive-foreground", bar: "bg-danger" },
   offline: { pill: "bg-slate-200 text-slate-800", bar: "bg-slate-400" },
 };
 export function relativeTime(timestamp: number, now: number) {

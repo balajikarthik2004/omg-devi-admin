@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import {
+  CalendarDays,
+  Sun,
   Home,
   Users,
   Flame,
@@ -36,12 +38,10 @@ import { QueueSection } from "./sections/QueueSection";
 import { StaffSection } from "./sections/StaffSection";
 import { OperationsSection } from "./sections/OperationsSection";
 import { ParkingSection } from "./sections/ParkingSection";
-import { AnnouncementsSection } from "./sections/AnnouncementsSection";
-import { AnalyticsSection } from "./sections/AnalyticsSection";
-import { EmergencySection } from "./sections/EmergencySection";
 import { DonationSection } from "./sections/DonationSection";
 import { AnnadhanamSection } from "./sections/AnnadhanamSection";
 import omgLogo from "@/assets/logo.png";
+import "./temple-theme.css";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Home,
@@ -58,6 +58,16 @@ const ICONS: Record<string, React.ComponentType<{ className?: string; size?: num
   Ticket,
   IndianRupee,
   Utensils,
+};
+
+const SECTION_SUBTITLES: Partial<Record<SectionId, string>> = {
+  heatmap: "Monitor crowd density, movement, and capacity across temple zones.",
+  staff: "Coordinate volunteer assignments, shifts, and coverage.",
+  operations: "Manage rituals, facilities, and daily temple operations.",
+  darshan: "Track bookings, ticket categories, and darshan entry flow.",
+  parking: "Monitor vehicle occupancy and parking availability.",
+  donations: "Review collections and temple fund activity.",
+  annadhanam: "Monitor meal service, queues, and kitchen readiness.",
 };
 
 export function TempleShell() {
@@ -82,7 +92,6 @@ export function TempleShell() {
     return "dashboard";
   });
   useEffect(() => {
-<<<<<<< HEAD
     function syncSection() {
       const hash = window.location.hash.slice(1);
       setSection(NAV_ITEMS.find((item) => item.id === hash)?.id ?? "dashboard");
@@ -94,11 +103,6 @@ export function TempleShell() {
     if (!window.location.hash) window.location.hash = "dashboard";
   }, []);
   const [templeId, setTempleId] = useState<string | null>("palani-murugan");
-=======
-    window.location.hash = section;
-  }, [section]);
-  const [templeId, setTempleId] = useState<string | null>("tiruvannamalai");
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
   const [templeOpen, setTempleOpen] = useState(false);
   const [selectedState, setSelectedState] = useState<string>("All States");
   const [stateOpen, setStateOpen] = useState(false);
@@ -128,78 +132,29 @@ export function TempleShell() {
     setTempleOpen(false);
     setTimeout(() => setShimmer(false), 1000);
   };
-  const sectionTitle = NAV_ITEMS.find((n) => n.id === section)?.label ?? "";
+  const isCctv = section === "cctv";
+  const currentSection = NAV_ITEMS.find((item) => item.id === section);
+  const SectionIcon = currentSection ? ICONS[currentSection.icon] : undefined;
+  const subtitle = SECTION_SUBTITLES[section];
 
   return (
-    <div className="min-h-dvh relative overflow-clip bg-background selection:bg-primary/30">
-      {/* -- Premium Mesh Background -- */}
-      <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-secondary-tint)_0%,transparent_50%),radial-gradient(ellipse_at_bottom_left,var(--color-muted)_0%,transparent_50%)] opacity-70" />
-      <div
-        className="orb-1 absolute top-[-10%] left-[-10%] h-[60vw] w-[60vw] rounded-full pointer-events-none z-0"
-        style={{
-          background: "radial-gradient(circle, rgba(226,46,40,0.03) 0%, transparent 60%)",
-          filter: "blur(60px)",
-        }}
-      />
-      <div
-        className="orb-2 absolute bottom-[-20%] right-[-10%] h-[50vw] w-[50vw] rounded-full pointer-events-none z-0"
-        style={{
-          background: "radial-gradient(circle, rgba(41,48,136,0.04) 0%, transparent 70%)",
-          filter: "blur(70px)",
-        }}
-      />
-
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 opacity-40"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, var(--color-border) 1px, transparent 1px), linear-gradient(to bottom, var(--color-border) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-<<<<<<< HEAD
+    <div
+      className="temple-admin relative min-h-dvh overflow-clip"
+      data-section={section}
+      data-nav-expanded={sidebarExpanded}
+    >
       <div className="relative z-10 flex min-h-dvh">
-=======
-      <div className="relative z-10 flex min-h-screen w-full max-w-full overflow-x-hidden">
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
         <Toaster position="top-right" richColors theme="light" />
 
-        {/* =============================
-          SIDEBAR (OMG Official Premium Gradient — Matching Devotee)
-          ============================= */}
-        <aside
-<<<<<<< HEAD
-          className={`fixed left-0 top-0 z-30 flex h-screen h-dvh shrink-0 flex-col transition-[width] duration-300 md:sticky ${sidebarExpanded ? "w-[276px]" : "w-[56px] md:w-[80px]"}`}
-=======
-          className={`fixed left-0 top-0 z-30 flex h-screen flex-col text-white transition-[width] duration-300 ease-in-out shrink-0 will-change-[width] ${
-            sidebarExpanded ? "w-[220px]" : "w-[72px]"
-          }`}
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
-          style={{
-            background: "linear-gradient(180deg, #131a72 0%, #1e2680 60%, #e32c26 100%)",
-            boxShadow: "4px 0 30px rgba(0,0,0,0.18)",
-          }}
-        >
-          {/* Ambient glow effect */}
-          <div className="absolute top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-          <div className="absolute -top-[150px] -left-[150px] w-[300px] h-[300px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
-
+        <aside className="temple-sidebar fixed top-0 left-0 z-30 flex h-dvh shrink-0 flex-col md:sticky">
           {/* Logo row */}
-<<<<<<< HEAD
           <div
-            className={`relative flex shrink-0 flex-col ${sidebarExpanded ? "px-5" : "px-1 md:px-4"} py-5 md:py-7`}
+            className={`temple-brand relative flex shrink-0 flex-col ${sidebarExpanded ? "px-5" : "px-1 md:px-4"} py-5 md:py-7`}
           >
             <div
               className={`flex items-center ${sidebarExpanded ? "gap-4" : "justify-center"} transition-all duration-300`}
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-500 hover:scale-105 border border-white/80 bg-white relative overflow-hidden group">
-=======
-          <div className="border-b border-white/10 flex items-center h-20 px-4 relative z-10">
-            <div className="flex items-center min-w-0">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shrink-0 overflow-hidden bg-white p-0.5 ring-1 ring-white/20 transition-transform duration-300 hover:scale-105">
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
                 <img
                   src={omgLogo}
                   alt="OMG Logo"
@@ -217,7 +172,7 @@ export function TempleShell() {
                   OMG
                 </div>
                 <div className="text-xs text-white/60 leading-tight font-medium uppercase tracking-widest mt-0.5">
-                  Admin
+                  Admin Portal
                 </div>
               </div>
             </div>
@@ -226,14 +181,9 @@ export function TempleShell() {
             <button
               type="button"
               onClick={() => setSidebarExpanded(!sidebarExpanded)}
-<<<<<<< HEAD
               aria-label={sidebarExpanded ? "Collapse navigation" : "Expand navigation"}
               aria-expanded={sidebarExpanded}
               className="absolute -right-3.5 top-10 flex h-7 w-7 items-center justify-center rounded-full z-40 transition-all duration-300 hover:scale-110 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-primary border border-border/10 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
-=======
-              aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
-              className="absolute -right-3.5 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full z-40 transition-transform duration-300 hover:scale-110 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-[#1e2680] border border-white/20 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)] cursor-pointer"
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
             >
               {sidebarExpanded ? (
                 <ChevronLeft size={14} strokeWidth={2.5} />
@@ -244,18 +194,16 @@ export function TempleShell() {
           </div>
 
           {/* Nav items */}
-<<<<<<< HEAD
-          <nav className="relative min-h-0 flex-1 overflow-y-auto px-1 py-4 md:px-4 md:py-6 space-y-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-=======
-          <nav className="relative flex-1 overflow-y-auto py-4 space-y-1.5 px-3 z-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
+          <nav
+            aria-label="Admin navigation"
+            className="temple-nav relative min-h-0 flex-1 overflow-y-auto px-1 py-4 md:px-4 md:py-6 space-y-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none"
+          >
             {NAV_ITEMS.map((item) => {
               const Icon = ICONS[item.icon];
               const active = item.id === section;
               return (
                 <button
                   key={item.id}
-<<<<<<< HEAD
                   onClick={() => {
                     window.location.hash = item.id;
                     setSection(item.id);
@@ -270,28 +218,19 @@ export function TempleShell() {
                       : "")
                   }
                   aria-current={active ? "page" : undefined}
+                  data-section={item.id}
                   className={`group relative flex w-full items-center ${sidebarExpanded ? "p-1.5 pr-4" : "p-1.5 justify-center"} rounded-2xl text-[14px] transition-all duration-400 border ${
                     active
                       ? "bg-white/10 backdrop-blur-xl border-white/20 border-t-white/30 border-l-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
                       : "border-transparent text-indigo-100/70 hover:bg-white/[0.06] hover:text-white"
                   }`}
                   title={item.label}
-=======
-                  onClick={() => setSection(item.id)}
-                  title={!sidebarExpanded ? item.label : undefined}
-                  className={`group relative flex items-center w-full h-11 px-3 rounded-xl text-[15px] font-semibold transition-colors duration-200 text-left overflow-hidden cursor-pointer ${
-                    active
-                      ? "bg-white/20 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md ring-1 ring-white/30"
-                      : "text-white/70 hover:bg-white/10 hover:text-white hover:shadow-md hover:ring-1 hover:ring-white/10"
-                  }`}
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
                 >
                   {/* Left Indicator for Active State */}
                   {active && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-gradient-to-b from-white to-white/60 rounded-r-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                    <div className="temple-nav-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-gradient-to-b from-white to-white/60 rounded-r-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
                   )}
 
-<<<<<<< HEAD
                   {/* Icon Container */}
                   <div
                     className={`flex items-center justify-center shrink-0 h-8 w-8 md:h-[42px] md:w-[42px] rounded-[14px] transition-colors duration-400 ${
@@ -307,19 +246,10 @@ export function TempleShell() {
                           ? "text-white drop-shadow-md"
                           : "text-indigo-200 group-hover:text-white transition-colors duration-400"
                       }
-=======
-                  {/* Icon */}
-                  <div className="w-5 h-5 shrink-0 flex items-center justify-center">
-                    <Icon
-                      className={`w-5 h-5 transition-transform duration-200 ${
-                        active ? "scale-110 text-white drop-shadow-md" : "group-hover:scale-110 group-hover:text-white"
-                      }`}
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
                     />
                   </div>
 
                   {/* Label */}
-<<<<<<< HEAD
                   {sidebarExpanded && (
                     <span
                       className={`ml-3 min-w-0 truncate transition-all duration-400 ${
@@ -333,7 +263,7 @@ export function TempleShell() {
                   {/* Right Dot for Active State */}
                   {item.id === "cctv" && cctv.activeCount > 0 && (
                     <span
-                      className={`${sidebarExpanded ? "ml-auto" : "absolute right-0 top-0"} grid min-w-5 shrink-0 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white`}
+                      className={`temple-alert-badge ${sidebarExpanded ? "ml-auto" : "absolute right-0 top-0"} grid min-w-5 shrink-0 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white`}
                     >
                       {cctv.activeCount}
                     </span>
@@ -341,32 +271,22 @@ export function TempleShell() {
                   {active && sidebarExpanded && item.id !== "cctv" && (
                     <div className="ml-auto shrink-0 w-1.5 h-1.5 rounded-full bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
                   )}
-=======
-                  <span
-                    className={`ml-3.5 whitespace-nowrap overflow-hidden tracking-wide drop-shadow-sm transition-all duration-300 ease-in-out ${
-                      sidebarExpanded
-                        ? "max-w-[140px] opacity-100 translate-x-0"
-                        : "max-w-0 opacity-0 -translate-x-2 pointer-events-none"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
                 </button>
               );
             })}
           </nav>
 
+          {sidebarExpanded && <div className="temple-sidebar-photo" aria-hidden="true" />}
+
           {/* User & Logout section */}
-<<<<<<< HEAD
           <div
-            className={`relative mt-auto flex shrink-0 flex-col gap-3 py-4 md:gap-5 md:py-5 ${sidebarExpanded ? "px-5" : "px-1 md:px-3"}`}
+            className={`temple-profile relative mt-auto flex shrink-0 flex-col gap-3 py-4 md:gap-5 md:py-5 ${sidebarExpanded ? "px-5" : "px-1 md:px-3"}`}
           >
             {/* Profile Container */}
             <div
               className={`flex items-center ${sidebarExpanded ? "gap-3.5" : "justify-center"} rounded-2xl p-2 cursor-pointer transition-all duration-400 border border-white/20 hover:bg-white/5 shadow-sm`}
             >
-              <div className="grid size-8 shrink-0 place-items-center rounded-full text-sm md:size-[42px] md:text-base font-bold text-white bg-[#1A1F60] shadow-inner">
+              <div className="temple-user-initial grid size-8 shrink-0 place-items-center rounded-full text-sm md:size-[42px] md:text-base font-bold text-white bg-[#1A1F60] shadow-inner">
                 A
               </div>
               {sidebarExpanded && (
@@ -375,49 +295,20 @@ export function TempleShell() {
                     Santhosh Kumar
                   </div>
                   <div className="truncate text-[11px] font-medium text-white/70 mt-0.5">Admin</div>
-=======
-          <div className="relative p-3 border-t border-white/10 mt-auto flex flex-col gap-1.5 z-10">
-            {/* Profile Container */}
-            <div
-              className="flex items-center w-full rounded-lg px-2.5 py-2 cursor-pointer transition-colors hover:bg-white/10 text-white overflow-hidden"
-              title={!sidebarExpanded ? "Santhosh Kumar (Admin)" : undefined}
-            >
-              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold text-white bg-white/20 ring-1 ring-white/30">
-                A
-              </div>
-              <div
-                className={`ml-2.5 whitespace-nowrap overflow-hidden text-left transition-all duration-300 ease-in-out ${
-                  sidebarExpanded
-                    ? "max-w-[130px] opacity-100 translate-x-0"
-                    : "max-w-0 opacity-0 -translate-x-2 pointer-events-none"
-                }`}
-              >
-                <div className="truncate text-sm font-semibold text-white leading-tight">
-                  Santhosh Kumar
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
                 </div>
-                <div className="truncate text-xs text-white/60 leading-tight mt-0.5">
-                  Admin
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Logout Button */}
             <button
-<<<<<<< HEAD
               aria-label="Logout"
               title="Logout"
-=======
-              type="button"
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
               onClick={() => {
                 auth.logout();
                 navigate({ to: "/login" });
               }}
               className="flex items-center w-full rounded-lg px-2.5 py-2 text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer overflow-hidden"
-              title={!sidebarExpanded ? "Logout" : undefined}
             >
-<<<<<<< HEAD
               <LogOut
                 size={20}
                 strokeWidth={2}
@@ -426,20 +317,6 @@ export function TempleShell() {
               {sidebarExpanded && (
                 <span className="font-bold text-[15px] tracking-wide">Logout</span>
               )}
-=======
-              <div className="w-8 h-5 shrink-0 flex items-center justify-center">
-                <LogOut className="w-4 h-4" />
-              </div>
-              <span
-                className={`ml-2.5 whitespace-nowrap overflow-hidden font-medium transition-all duration-300 ease-in-out ${
-                  sidebarExpanded
-                    ? "max-w-[130px] opacity-100 translate-x-0"
-                    : "max-w-0 opacity-0 -translate-x-2 pointer-events-none"
-                }`}
-              >
-                Logout
-              </span>
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
             </button>
           </div>
         </aside>
@@ -447,22 +324,17 @@ export function TempleShell() {
         {/* =============================
         TOPBAR
         ============================= */}
-        <header
-<<<<<<< HEAD
-          className={`fixed right-0 top-0 z-20 flex h-16 items-center justify-between px-3 md:px-8 transition-[left] duration-300 bg-white/70 backdrop-blur-2xl border-b border-border/40 shadow-sm left-[56px] ${sidebarExpanded ? "md:left-[276px]" : "md:left-[80px]"}`}
-=======
-          className={`fixed right-0 top-0 z-20 flex h-16 items-center justify-between px-8 transition-[left] duration-300 ease-in-out bg-white/70 backdrop-blur-2xl border-b border-border/40 shadow-sm ${sidebarExpanded ? "left-[220px]" : "left-[72px]"}`}
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
-        >
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-bold tracking-wide bg-status-normal/10 border border-status-normal/20 text-status-normal shadow-sm">
+        <header className="temple-topbar fixed top-0 right-0 z-20 flex items-center justify-between border-b shadow-sm">
+          <div className="temple-topbar-group temple-topbar-selectors flex items-center gap-4">
+            <div className="temple-topbar-live hidden sm:flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-bold tracking-wide bg-status-normal/10 border border-status-normal/20 text-status-normal shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-status-normal animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
               LIVE
             </div>
 
             {/* State filter */}
-            <div className="relative hidden lg:block">
+            <div className="temple-topbar-filter relative hidden lg:block">
               <button
+                aria-expanded={stateOpen}
                 onClick={() => {
                   setStateOpen((o) => !o);
                   setDistrictOpen(false);
@@ -503,8 +375,9 @@ export function TempleShell() {
             </div>
 
             {/* District filter */}
-            <div className="relative hidden lg:block">
+            <div className="temple-topbar-filter relative hidden lg:block">
               <button
+                aria-expanded={districtOpen}
                 onClick={() => {
                   setDistrictOpen((o) => !o);
                   setStateOpen(false);
@@ -546,8 +419,9 @@ export function TempleShell() {
             </div>
 
             {/* Temple switcher */}
-            <div className="relative">
+            <div className="temple-topbar-filter temple-topbar-temple relative">
               <button
+                aria-expanded={templeOpen}
                 aria-label={temple ? "Select temple, current " + temple.name : "Select temple"}
                 onClick={() => {
                   setTempleOpen((o) => !o);
@@ -590,35 +464,42 @@ export function TempleShell() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="temple-topbar-group flex items-center gap-4">
             {/* Empty space that was replaced by moving filters */}
 
             {/* Clock + weather */}
-            <div className="hidden xl:flex items-center gap-1.5 text-xs ml-2">
-              <span className="font-mono font-semibold tracking-tight text-foreground">
-                {now.toLocaleTimeString("en-IN", {
-                  hour12: false,
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-              <span className="text-[11px] font-medium text-muted-foreground">
-                -{" "}
-                {now.toLocaleDateString("en-IN", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                })}
-              </span>
+            <div className="temple-topbar-clock hidden xl:flex items-center gap-2 text-xs ml-2">
+              <CalendarDays size={17} aria-hidden="true" />
+              <div
+                className={
+                  isCctv ? "flex flex-col-reverse leading-tight" : "flex items-center gap-1.5"
+                }
+              >
+                <span className="font-mono font-semibold tracking-tight text-foreground">
+                  {now.toLocaleTimeString("en-IN", {
+                    hour12: false,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                <span className="text-[11px] font-medium text-muted-foreground">
+                  {now.toLocaleDateString("en-IN", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  })}
+                </span>
+              </div>
             </div>
 
             {/* Weather */}
             {temple && (
-              <div className="hidden min-[1150px]:flex items-center gap-2 rounded-full px-4 py-2 bg-white border border-border/60 shadow-sm ml-2">
+              <div className="temple-topbar-weather hidden min-[1150px]:flex items-center gap-2 rounded-full px-4 py-2 bg-white border border-border/60 shadow-sm ml-2">
                 <span className="text-[9px] font-semibold tracking-wider text-muted-foreground">
                   {temple.short}
                 </span>
                 <span className="text-xs font-bold text-foreground">{temple.weather}</span>
+                <Sun size={16} aria-hidden="true" />
               </div>
             )}
 
@@ -628,7 +509,7 @@ export function TempleShell() {
                 aria-label={`Notifications, ${cctv.activeCount} active camera alerts`}
                 title="Notifications"
                 onClick={() => {
-                  if (section === "cctv") setCctvAlertsOpen(true);
+                  if (isCctv) setCctvAlertsOpen(true);
                   else setBellOpen((o) => !o);
                   setDistrictOpen(false);
                   setStateOpen(false);
@@ -641,14 +522,14 @@ export function TempleShell() {
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 />
                 {cctv.activeCount > 0 && (
-                  <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full text-[8px] font-bold text-white bg-primary shadow-sm border border-white">
+                  <span className="temple-alert-badge absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full text-[8px] font-bold text-white bg-primary shadow-sm border border-white">
                     {cctv.activeCount}
                   </span>
                 )}
               </button>
               {bellOpen && (
                 <div className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl shadow-xl bg-white border border-border/50">
-                  <div className="px-5 py-3 text-[11px] font-bold tracking-tight bg-muted/40 border-b border-border/50 text-white">
+                  <div className="px-5 py-3 text-[11px] font-bold tracking-tight bg-muted/40 border-b border-border/50 text-foreground">
                     Notifications
                   </div>
                   {[
@@ -694,29 +575,18 @@ export function TempleShell() {
             </div>
 
             {/* Avatar */}
-            <div className="grid h-10 w-10 place-items-center rounded-full text-xs font-bold text-white cursor-pointer transition-all duration-300 hover:scale-105 bg-[#1A1F60] shadow-sm ml-1 border border-white/20">
+            <div className="temple-topbar-avatar grid h-10 w-10 place-items-center rounded-full text-xs font-bold text-white cursor-pointer transition-all duration-300 hover:scale-105 bg-[#1A1F60] shadow-sm ml-1 border border-white/20">
               A
             </div>
           </div>
         </header>
 
-<<<<<<< HEAD
-        <main className="ml-[56px] min-h-dvh min-w-0 flex-1 pt-16 md:ml-0">
-          <div className="relative mx-auto min-h-[calc(100dvh-4rem)] w-full max-w-[1600px] px-3 py-5 sm:p-6 lg:p-8">
+        <main className="temple-content ml-[56px] min-h-dvh min-w-0 flex-1 pt-16 md:ml-0">
+          <div className="temple-content-inner relative mx-auto min-h-[calc(100dvh-4rem)] w-full max-w-[1600px] px-3 py-5 sm:p-6 lg:p-8">
             {/* Temple switch shimmer */}
             {shimmer && (
               <div
-                className={`fixed top-16 right-0 bottom-0 z-50 left-[56px] ${sidebarExpanded ? "md:left-[276px]" : "md:left-[80px]"} flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 bg-background/70`}
-=======
-        <main
-          className={`flex-1 pt-16 min-w-0 max-w-full overflow-x-hidden transition-[margin-left,max-width] duration-300 ease-in-out ${sidebarExpanded ? "ml-[220px] max-w-[calc(100vw-220px)]" : "ml-[72px] max-w-[calc(100vw-72px)]"}`}
-        >
-          <div className="relative p-4 sm:p-6 lg:p-7 min-h-[calc(100vh-4rem)] w-full max-w-full overflow-x-hidden min-w-0">
-            {/* Temple switch shimmer */}
-            {shimmer && (
-              <div
-                className={`fixed top-16 right-0 bottom-0 z-50 transition-[left] duration-300 ease-in-out ${sidebarExpanded ? "left-[220px]" : "left-[72px]"} flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 bg-background/70`}
->>>>>>> fdd6855715257b11d5242fc9ae3c6e710aa57b41
+                className={`temple-switch-loading fixed right-0 bottom-0 z-50 flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 bg-background/70`}
               >
                 <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-red-500/5 backdrop-blur-xl shadow-[0_0_50px_rgba(239,68,68,0.15)] transform scale-110">
                   <span className="text-7xl font-montserrat text-primary/15 relative z-10">ॐ</span>
@@ -731,10 +601,25 @@ export function TempleShell() {
             )}
 
             <div
-              className={`transition-all duration-500 ${shimmer ? "opacity-30 blur-[2px] pointer-events-none translate-y-2" : "opacity-100 translate-y-0 blur-none"}`}
+              className={`temple-workspace transition-all duration-200 ${shimmer ? "opacity-30 blur-[2px] pointer-events-none translate-y-2" : "opacity-100 translate-y-0 blur-none"}`}
             >
               {temple && (
                 <>
+                  {currentSection && SectionIcon && subtitle && (
+                    <div className="temple-page-heading">
+                      <span className="temple-page-icon" aria-hidden="true">
+                        <SectionIcon size={21} />
+                      </span>
+                      <div>
+                        <h1 className="text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl">
+                          {currentSection.label}
+                        </h1>
+                        <p className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
+                          {subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   {section === "dashboard" && <DashboardSection temple={temple} />}
                   {section === "darshan" && <DarshanSection />}
                   {section === "heatmap" && <HeatmapSection temple={temple} />}
@@ -755,9 +640,6 @@ export function TempleShell() {
                   {section === "annadhanam" && <AnnadhanamSection temple={temple} />}
                 </>
               )}
-              {/* {section === "announcements" && <AnnouncementsSection />} */}
-              {/* {section === "analytics" && <AnalyticsSection />} */}
-              {/* {section === "emergency" && <EmergencySection />} */}
             </div>
           </div>
         </main>

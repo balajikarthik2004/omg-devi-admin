@@ -111,7 +111,7 @@ export function DarshanSection() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Hourly Flow Chart */}
-        <div className="lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md h-full">
+        <div className="temple-panel lg:col-span-2 rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all h-full">
           <div className="mb-8 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-extrabold text-foreground tracking-tight font-montserrat">Hourly Entry Flow</h3>
@@ -189,7 +189,7 @@ export function DarshanSection() {
           </div>
         </div>
         {/* Counter & Lane Control */}
-        <div className="lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl p-6 lg:p-8 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
+        <div className="temple-panel lg:col-span-1 rounded-3xl border border-border/50 bg-white/60 p-6 lg:p-8 shadow-sm transition-all h-full flex flex-col">
           <div className="mb-8 flex items-center justify-between">
             <div>
               <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
@@ -204,7 +204,7 @@ export function DarshanSection() {
               const key = keys[i] as keyof typeof lanes;
               const isOpen = lanes[key];
               return (
-                <div key={c.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/40 border border-white/60 shadow-sm">
+                <div key={c.id} className="temple-panel flex items-center justify-between p-4 rounded-2xl bg-white/40 border border-white/60 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div
                       className={`h-2.5 w-2.5 rounded-full shadow-sm ${isOpen ? c.bg : "bg-muted"}`}
@@ -230,7 +230,7 @@ export function DarshanSection() {
       </div>
 
       {/* Recent Bookings Table */}
-      <div className="mt-2 rounded-3xl border border-border/50 bg-white/60 backdrop-blur-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+      <div className="temple-panel mt-2 rounded-3xl border border-border/50 bg-white/60 shadow-sm overflow-hidden transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border/50 bg-muted/20 px-6 py-5 gap-4">
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2.5">
             <div className="p-1.5 rounded-md bg-primary/10">
@@ -284,7 +284,7 @@ export function DarshanSection() {
                   <td className="px-6 py-4.5 whitespace-nowrap text-xs font-medium text-muted-foreground">{bk.time}</td>
                   <td className="px-6 py-4.5 whitespace-nowrap text-xs font-medium text-foreground">
                     {bk.mode === "UPI" ? (
-                      <span className="inline-flex items-center gap-1 text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100 font-bold uppercase tracking-widest text-[9px]">UPI</span>
+                      <span className="inline-flex items-center gap-1 text-secondary bg-secondary-tint px-2.5 py-1 rounded-md border border-secondary/20 font-bold uppercase tracking-widest text-[9px]">UPI</span>
                     ) : bk.mode === "Card" ? (
                       <span className="inline-flex items-center gap-1 text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100 font-bold uppercase tracking-widest text-[9px]">Card</span>
                     ) : bk.mode === "Cash" ? (
