@@ -1,130 +1,16 @@
 .temple-admin {
-  --sidebar-width: 52px;
+  --sidebar-width: 64px;
   --topbar-height: 92px;
   background: var(--temple-bg);
   color: var(--temple-ink);
 }
 .temple-admin[data-nav-expanded="true"] .temple-sidebar {
-  width: 216px;
+  width: 240px;
 }
 .temple-admin .temple-sidebar {
   width: var(--sidebar-width);
-  background: var(--temple-dark);
-  box-shadow: 2px 0 12px rgb(8 39 31 / 12%);
-}
-.temple-admin .temple-brand {
-  padding: 0.875rem 0.5rem;
-  border-bottom: 1px solid rgb(255 255 255 / 10%);
-}
-.temple-admin[data-nav-expanded="true"] .temple-brand {
-  padding-inline: 0.875rem;
-}
-.temple-admin .temple-brand > div:first-child {
-  gap: 0.125rem;
-}
-.temple-admin .temple-brand > div > div:first-child {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-}
-.temple-admin .temple-brand .font-serif {
-  font-family: inherit;
-}
-.temple-admin .temple-brand > button {
-  top: 1.25rem;
-  right: -0.625rem;
-  width: 22px;
-  height: 22px;
-  color: var(--temple-green);
-}
-.temple-admin .temple-nav {
-  flex: 0 1 auto;
-  padding: 0.75rem 0.375rem;
-}
-.temple-admin[data-nav-expanded="true"] .temple-nav {
-  padding-inline: 0.75rem;
-}
-.temple-admin .temple-nav button {
-  min-height: 36px;
-  color: #f2f8f4;
-  border-radius: 12px;
-  padding: 0.125rem;
-  font-size: 0.8125rem;
-  transition:
-    background-color 180ms,
-    color 180ms;
-}
-.temple-admin .temple-nav button > div:not(.temple-nav-indicator) {
-  width: 30px;
-  height: 30px;
-  margin-left: 0;
-  background: rgb(255 255 255 / 8%);
-}
-.temple-admin .temple-nav button svg {
-  color: currentColor;
-  width: 16px;
-}
-.temple-admin .temple-nav button > span:not(.temple-alert-badge) {
-  letter-spacing: 0;
-  margin-left: 0.375rem;
-}
-.temple-admin .temple-nav button > .temple-alert-badge {
-  margin-right: 0.25rem;
-}
-.temple-admin[data-section="cctv"] .temple-nav button[data-section="dashboard"],
-.temple-admin .temple-nav button[aria-current="page"] {
-  background: var(--temple-gold);
-  color: var(--temple-dark);
-}
-.temple-admin .temple-nav button[aria-current="page"] {
-  box-shadow: none;
-}
-.temple-admin[data-section="cctv"] .temple-nav button[aria-current="page"] {
-  background: #1a4938;
-  border-color: #4b6249;
-  color: #fff;
-  box-shadow: none;
-}
-.temple-admin .temple-nav .temple-nav-indicator {
-  background: var(--temple-gold);
-  width: 3px;
-  height: 19px;
-  box-shadow: none;
-}
-.temple-admin .temple-alert-badge {
-  background: #bf241c;
-}
-.temple-sidebar-photo {
-  flex: 1 0 0;
-  min-height: 0;
-  background:
-    linear-gradient(var(--temple-dark), transparent 35%, transparent 78%, var(--temple-dark)),
-    url("/temples/tiruvannamalai/tower.jpg") center 60% / cover;
-}
-.temple-admin .temple-profile {
-  gap: 0.375rem;
-  padding: 0.625rem 0.375rem;
-}
-.temple-admin[data-nav-expanded="true"] .temple-profile {
-  padding-inline: 0.75rem;
-}
-.temple-admin .temple-profile > div {
-  background: var(--temple-green);
-  border-radius: 12px;
-  cursor: default;
-}
-.temple-admin .temple-user-initial {
-  background: var(--temple-gold);
-  color: var(--temple-dark);
-}
-.temple-admin .temple-profile > button {
-  justify-content: center;
-  gap: 0.35rem;
-  color: #f2f8f4;
-}
-.temple-admin .temple-profile > button span {
-  font-size: 0.8125rem;
-  letter-spacing: 0;
+  background: #072a1e;
+  box-shadow: 4px 0 24px rgb(8 39 31 / 25%);
 }
 .temple-admin .temple-topbar {
   left: var(--sidebar-width);
@@ -229,7 +115,7 @@
     --sidebar-width: 64px;
   }
   .temple-admin[data-nav-expanded="true"] {
-    --sidebar-width: 216px;
+    --sidebar-width: 240px;
   }
   .temple-admin .temple-topbar {
     flex-wrap: nowrap;
@@ -244,10 +130,6 @@
   .temple-admin .temple-content-inner {
     padding: 0.875rem 1rem 1.25rem;
   }
-}
-
-.temple-admin .temple-nav button:hover:not([aria-current="page"]):not([data-section="dashboard"]) {
-  background: #164336;
 }
 .temple-admin .temple-page-heading {
   display: flex;

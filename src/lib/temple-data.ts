@@ -1,3 +1,5 @@
+import { penangTemple } from "./penang-temple";
+
 export const TEMPLES = [
   {
     id: "tiruvannamalai",
@@ -323,9 +325,13 @@ export const TEMPLES = [
 
 export type Temple = (typeof TEMPLES)[number];
 
+export const TEMPLE_DIRECTORY = [...TEMPLES, penangTemple];
+
 export const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: "Home" },
   { id: "heatmap", label: "AI Heatmap", icon: "Flame" },
+  { id: "map", label: "Temple Map", icon: "MapPin" },
+  { id: "store", label: "Temple Store", icon: "Store" },
   { id: "cctv", label: "CCTV Monitor", icon: "Video" },
   // { id: "queue", label: "Queue Management", icon: "Timer" },
   { id: "staff", label: "Volunteer Staff", icon: "UsersRound" },
