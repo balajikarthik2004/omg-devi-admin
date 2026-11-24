@@ -321,11 +321,23 @@ export const TEMPLES = [
     district: "Kheda",
     state: "Gujarat",
   },
+  {
+    id: "batu-caves-murugan",
+    name: "Batu Caves Sri Subramaniar Swamy Temple",
+    short: "Batu Caves",
+    weather: "31°C ⛅",
+    district: "Selangor",
+    state: "Malaysia",
+  },
 ];
 
 export type Temple = (typeof TEMPLES)[number];
 
-export const TEMPLE_DIRECTORY = [...TEMPLES, penangTemple];
+const batuCavesTemple = TEMPLES.find((t) => t.id === "batu-caves-murugan")!;
+const otherAdminTemples = TEMPLES.filter((t) => t.id !== "batu-caves-murugan");
+
+// 1. Batu Caves Sri Subramaniar Swamy Temple, 2. Thaneermalai Shree Balathandayuthapani Devasthanam
+export const TEMPLE_DIRECTORY = [batuCavesTemple, penangTemple, ...otherAdminTemples];
 
 export const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: "Home" },
@@ -766,3 +778,242 @@ export const densityColor = (pct: number) => {
   if (pct >= 45) return "var(--status-busy)";
   return "var(--status-normal)";
 };
+
+export const BATU_CAVES_ZONES: ZoneItem[] = [
+  {
+    id: "temple-cave",
+    name: "Temple Cave Entrance",
+    subtitle: "Upper Cavern & Sri Subramaniar Sanctum",
+    category: "sanctum",
+    capacity: 1200,
+    current: 972, // 81% High crowd
+    status: "CRITICAL",
+    action: "Regulate Stairway Ascent Batches",
+    actionLabel: "Batch Entry",
+    actionType: "batch_entry",
+    hotspot: { x: 50, y: 22 },
+    camId: "CAM-01",
+    waitTime: "45 mins",
+  },
+  {
+    id: "rainbow-staircase",
+    name: "Rainbow Staircase",
+    subtitle: "272 Colourful Concrete Steps Ascent",
+    category: "mandapam",
+    capacity: 2500,
+    current: 1900, // 76% High crowd
+    status: "BUSY",
+    action: "Deploy Step Marshals & Keep Right",
+    actionLabel: "Deploy Marshals",
+    actionType: "monitor",
+    hotspot: { x: 49, y: 40 },
+    camId: "CAM-02",
+    waitTime: "30 mins",
+  },
+  {
+    id: "murugan-statue",
+    name: "Lord Murugan Statue",
+    subtitle: "42.7m Golden Statue & Base Concourse",
+    category: "mandapam",
+    capacity: 3000,
+    current: 1740, // 58% Moderate crowd
+    status: "MODERATE",
+    action: "Guide Photo Devotees Away From Steps",
+    actionLabel: "Guide Flow",
+    actionType: "divert",
+    hotspot: { x: 57, y: 46 },
+    camId: "CAM-03",
+    waitTime: "15 mins",
+  },
+  {
+    id: "main-forecourt",
+    name: "Main Forecourt",
+    subtitle: "Lower Arrival Concourse & Plaza",
+    category: "facility",
+    capacity: 5000,
+    current: 1600, // 32% Low crowd
+    status: "NORMAL",
+    action: "Maintain Open Pathways",
+    actionLabel: "Normal Flow",
+    actionType: "clear",
+    hotspot: { x: 49, y: 72 },
+    camId: "CAM-04",
+    waitTime: "0 mins",
+  },
+  {
+    id: "car-parking",
+    name: "Car Parking",
+    subtitle: "On-site Base Parking Facility",
+    category: "parking",
+    capacity: 1500,
+    current: 930, // 62%
+    status: "MODERATE",
+    action: "Direct Excess Vehicles to Overflow Bays",
+    actionLabel: "Overflow Divert",
+    actionType: "alert",
+    hotspot: { x: 28, y: 90 },
+    camId: "CAM-05",
+    waitTime: "Slots: 570",
+  },
+  {
+    id: "ktm-station",
+    name: "KTM Batu Caves Gate",
+    subtitle: "Komuter Rail Link (5 min walk)",
+    category: "gopuram",
+    capacity: 2000,
+    current: 760, // 38%
+    status: "NORMAL",
+    action: "Monitor Train Arrival Footfall",
+    actionLabel: "Monitor Train",
+    actionType: "monitor",
+    hotspot: { x: 88, y: 84 },
+    camId: "CAM-06",
+    waitTime: "Train: 15m",
+  },
+  {
+    id: "public-restrooms",
+    name: "Public Restrooms",
+    subtitle: "Foothill Sanitation Facility Near Stairs",
+    category: "facility",
+    capacity: 300,
+    current: 120, // 40%
+    status: "NORMAL",
+    action: "Sanitation Maintenance Active",
+    actionLabel: "Maintain Cleanliness",
+    actionType: "monitor",
+    hotspot: { x: 38, y: 60 },
+    camId: "CAM-07",
+    waitTime: "5 mins",
+  },
+  {
+    id: "snacks-drinks",
+    name: "Snacks & Drinks",
+    subtitle: "Hydration & Refreshment Stations",
+    category: "facility",
+    capacity: 400,
+    current: 180, // 45%
+    status: "NORMAL",
+    action: "Restock Water Supplies",
+    actionLabel: "Restock",
+    actionType: "monitor",
+    hotspot: { x: 64, y: 62 },
+    camId: "CAM-08",
+    waitTime: "0 mins",
+  },
+  {
+    id: "souvenir-stalls",
+    name: "Souvenir Stalls",
+    subtitle: "Religious Souvenirs & Offerings at Foot of Stairs",
+    category: "facility",
+    capacity: 500,
+    current: 210, // 42%
+    status: "NORMAL",
+    action: "Maintain Devotee Walkway Clearance",
+    actionLabel: "Clear Walkway",
+    actionType: "monitor",
+    hotspot: { x: 67, y: 68 },
+    camId: "CAM-09",
+    waitTime: "0 mins",
+  },
+];
+
+export const PENANG_ZONES: ZoneItem[] = [
+  {
+    id: "hilltop",
+    name: "Hilltop Murugan Temple",
+    subtitle: "7-Storey Gopuram & Hilltop Sanctum",
+    category: "sanctum",
+    capacity: 1000,
+    current: 780, // 78% High crowd
+    status: "CRITICAL",
+    action: "Regulate Batch Ascent on Stairs",
+    actionLabel: "Batch Entry",
+    actionType: "batch_entry",
+    hotspot: { x: 64, y: 26 },
+    camId: "CAM-P1",
+    waitTime: "45 mins",
+  },
+  {
+    id: "stairway",
+    name: "Hillside Stairway",
+    subtitle: "500+ Steps Uphill Route",
+    category: "mandapam",
+    capacity: 2000,
+    current: 1280, // 64% Moderate crowd
+    status: "MODERATE",
+    action: "Deploy Stair Marshals & Monitor Resting Points",
+    actionLabel: "Deploy Marshals",
+    actionType: "monitor",
+    hotspot: { x: 58, y: 49 },
+    camId: "CAM-P2",
+    waitTime: "25 mins",
+  },
+  {
+    id: "old-shrine",
+    name: "Old Murugan Temple",
+    subtitle: "Historic 1850 Mid-Hill Shrine",
+    category: "mandapam",
+    capacity: 600,
+    current: 258, // 43% Moderate crowd
+    status: "MODERATE",
+    action: "Maintain Mid-Hill Queue Separation",
+    actionLabel: "Manage Queue",
+    actionType: "monitor",
+    hotspot: { x: 41, y: 48 },
+    camId: "CAM-P3",
+    waitTime: "15 mins",
+  },
+  {
+    id: "shiva",
+    name: "Lord Shiva Statue",
+    subtitle: "8.23m Shiva Statue at Foot of the Hill",
+    category: "mandapam",
+    capacity: 500,
+    current: 125, // 25% Low crowd
+    status: "NORMAL",
+    action: "Tranquil Courtyard Monitoring",
+    actionLabel: "Normal Flow",
+    actionType: "clear",
+    hotspot: { x: 27, y: 74 },
+    camId: "CAM-P4",
+    waitTime: "0 mins",
+  },
+  {
+    id: "main-entrance",
+    name: "Main Entrance",
+    subtitle: "Foothill Entry Gopuram & Concourse",
+    category: "gopuram",
+    capacity: 2500,
+    current: 750, // 30% Low crowd
+    status: "NORMAL",
+    action: "Maintain Open Entry Pathways",
+    actionLabel: "Normal Flow",
+    actionType: "clear",
+    hotspot: { x: 50, y: 76 },
+    camId: "CAM-P5",
+    waitTime: "0 mins",
+  },
+  {
+    id: "parking",
+    name: "Temple Car Park",
+    subtitle: "Approximate Area On-Site Parking",
+    category: "parking",
+    capacity: 500,
+    current: 340, // 68%
+    status: "BUSY",
+    action: "Direct Excess Vehicles to Overflow Bays",
+    actionLabel: "Overflow Guide",
+    actionType: "alert",
+    hotspot: { x: 74, y: 87 },
+    camId: "CAM-P6",
+    waitTime: "Slots: 160",
+  },
+];
+
+export function getZonesForTemple(templeId?: string): ZoneItem[] {
+  if (!templeId) return BATU_CAVES_ZONES;
+  const tid = templeId.toLowerCase();
+  if (tid.includes("batu") || tid.includes("subramaniar")) return BATU_CAVES_ZONES;
+  if (tid.includes("penang") || tid.includes("balathandayuthapani") || tid.includes("thaneermalai")) return PENANG_ZONES;
+  return ZONES;
+}

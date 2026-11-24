@@ -102,7 +102,7 @@ export function TempleShell() {
     return "dashboard";
   });
   const [templeId, setTempleId] = useState<string>(() =>
-    isPenangSection(section) ? penangTemple.id : "palani-murugan",
+    isPenangSection(section) ? penangTemple.id : "batu-caves-murugan",
   );
   useEffect(() => {
     function syncSection() {

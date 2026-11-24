@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { densityColor, statusColor, ZONES, type ZoneItem } from "@/lib/temple-data";
+import { densityColor, statusColor, ZONES, getZonesForTemple, type ZoneItem } from "@/lib/temple-data";
 import { useJitter } from "@/lib/use-live";
 import { toast } from "sonner";
 import {
@@ -43,14 +43,38 @@ import maduraiImg from "@/assets/Madurai.png";
 import srirangamImg from "@/assets/Srirangam.png";
 import arunachaleswararImg from "@/assets/Arunachaleswarar.png";
 import rameswaramImg from "@/assets/Rameswaram.png";
+import batuCavesImg from "@/assets/batu-caves-heatmap.jpg";
+import penangHeatmapImg from "@/assets/penang-heatmap.jpg";
+import { penangGroundsMap } from "./penang-map-data";
 
 const imgMap: Record<string, string> = {
+  "batu-caves-murugan": batuCavesImg,
+  "penang-balathandayuthapani": penangHeatmapImg,
   "palani-murugan": palaniImg,
   "madurai-meenakshi": maduraiImg,
   srirangam: srirangamImg,
   tiruvannamalai: arunachaleswararImg,
   rameswaram: rameswaramImg,
 };
+
+function getHeatmapImage(t: any): string {
+  if (!t) return batuCavesImg;
+  const id = t.id || "";
+  const name = (t.name || "").toLowerCase();
+  if (id === "batu-caves-murugan" || name.includes("batu") || name.includes("subramaniar")) {
+    return batuCavesImg;
+  }
+  if (
+    id === "penang-balathandayuthapani" ||
+    name.includes("balathandayuthapani") ||
+    name.includes("penang") ||
+    name.includes("thaneermalai")
+  ) {
+    return penangHeatmapImg;
+  }
+  if (imgMap[id]) return imgMap[id];
+  return arunachaleswararImg;
+}
 
 const forecastData = [
   { t: "Now", v: 12450, wait: "85m", risk: "Elevated" },
@@ -77,7 +101,13 @@ export function HeatmapSection({ temple }: { temple?: any }) {
   const parking = useJitter(3820, 30);
 
   // Dynamic live zones with smooth drift
-  const [liveZones, setLiveZones] = useState<ZoneItem[]>(ZONES);
+  const [liveZones, setLiveZones] = useState<ZoneItem[]>(() => getZonesForTemple(temple?.id));
+
+  useEffect(() => {
+    const zones = getZonesForTemple(temple?.id);
+    setLiveZones(zones);
+    setSelectedZoneId(zones[0]?.id || "sanctum");
+  }, [temple?.id]);
 
   useEffect(() => {
     if (!playing) return;
@@ -109,7 +139,7 @@ export function HeatmapSection({ temple }: { temple?: any }) {
   const handleManualRefresh = () => {
     setRefreshSpin(true);
     setTimeout(() => {
-      setLiveZones([...ZONES]);
+      setLiveZones(getZonesForTemple(temple?.id));
       setRefreshSpin(false);
       toast.success("AI Heatmap & sensor feeds synchronized.");
     }, 600);
@@ -264,8 +294,8 @@ export function HeatmapSection({ temple }: { temple?: any }) {
           {/* Clean Temple Heatmap Viewport (Unobstructed View) */}
           <div className="relative w-full flex-1 rounded-2xl overflow-hidden border border-border/40 shadow-sm bg-slate-900 flex items-center justify-center min-w-0">
             <img
-              src={temple && imgMap[temple.id] ? imgMap[temple.id] : arunachaleswararImg}
-              alt="Tiruvannamalai Arunachaleswarar Temple Complex Heatmap"
+              src={getHeatmapImage(temple)}
+              alt={`${temple?.name || "Temple"} Complex Heatmap`}
               className="w-full h-auto object-cover select-none rounded-2xl"
             />
           </div>
@@ -723,12 +753,12 @@ export function HeatmapSection({ temple }: { temple?: any }) {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={temple && imgMap[temple.id] ? imgMap[temple.id] : arunachaleswararImg}
+              src={getHeatmapImage(temple)}
               alt="High-Res Temple Radar View"
               className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/20"
             />
             <div className="mt-3 text-center text-white/80 text-xs font-bold tracking-wide">
-              Tiruvannamalai Arunachaleswarar Temple Complex — Live Surveillance & Heatmap Radar
+              {temple?.name || "Temple"} Complex — Live Surveillance & Heatmap Radar
             </div>
           </div>
         </div>

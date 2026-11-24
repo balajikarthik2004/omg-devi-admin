@@ -2,14 +2,14 @@ import { penangParkingDirections } from "./penang-visit";
 
 export const penangTemple = {
   id: "penang-balathandayuthapani",
-  name: "Arulmigu Balathandayuthapani Temple",
+  name: "Thaneermalai Shree Balathandayuthapani Devasthanam",
   short: "Penang",
   district: "Penang",
   state: "Malaysia",
   city: "George Town",
   weather: null,
   timeZone: "Asia/Kuala_Lumpur",
-  alias: "Waterfall Hilltop Temple",
+  alias: "Waterfall Hilltop Temple / Arulmigu Balathandayuthapani",
   deity: "Lord Murugan (Balathandayuthapani)",
   image: "/temples/penang-balathandayuthapani/banner.webp",
   address: "Jalan Kebun Bunga, Pulau Tikus, 10350 George Town, Penang, Malaysia",
