@@ -329,15 +329,26 @@ export const TEMPLES = [
     district: "Selangor",
     state: "Malaysia",
   },
+  {
+    id: "penang-balathandayuthapani",
+    name: "Thaneermalai Shree Balathandayuthapani Devasthanam",
+    short: "Penang",
+    weather: "30°C ⛅",
+    district: "Penang",
+    state: "Malaysia",
+  },
 ];
 
 export type Temple = (typeof TEMPLES)[number];
 
 const batuCavesTemple = TEMPLES.find((t) => t.id === "batu-caves-murugan")!;
-const otherAdminTemples = TEMPLES.filter((t) => t.id !== "batu-caves-murugan");
+const penangAdminTemple = TEMPLES.find((t) => t.id === "penang-balathandayuthapani")!;
+const otherAdminTemples = TEMPLES.filter(
+  (t) => t.id !== "batu-caves-murugan" && t.id !== "penang-balathandayuthapani"
+);
 
 // 1. Batu Caves Sri Subramaniar Swamy Temple, 2. Thaneermalai Shree Balathandayuthapani Devasthanam
-export const TEMPLE_DIRECTORY = [batuCavesTemple, penangTemple, ...otherAdminTemples];
+export const TEMPLE_DIRECTORY = [batuCavesTemple, penangAdminTemple, ...otherAdminTemples];
 
 export const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: "Home" },

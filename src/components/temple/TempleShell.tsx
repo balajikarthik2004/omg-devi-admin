@@ -125,9 +125,9 @@ export function TempleShell() {
   const [shimmer, setShimmer] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
 
-  const temple = TEMPLE_DIRECTORY.find((t) => t.id === templeId);
-  const profile = temple && "timeZone" in temple ? temple : undefined;
-  const cameraAlertCount = profile ? 0 : cctv.activeCount;
+  const temple = TEMPLE_DIRECTORY.find((t) => t.id === templeId) ?? TEMPLE_DIRECTORY[0];
+  const isPenang = temple.id === "penang-balathandayuthapani";
+  const cameraAlertCount = cctv.activeCount;
 
   const otherStates = Array.from(new Set(TEMPLE_DIRECTORY.map((t) => t.state)))
     .filter((s) => s !== "Tamil Nadu")
@@ -145,7 +145,7 @@ export function TempleShell() {
   const switchTemple = (id: string) => {
     setShimmer(true);
     setTempleId(id);
-    if (id !== penangTemple.id && isPenangSection(section)) {
+    if (id !== "penang-balathandayuthapani" && isPenangSection(section)) {
       window.location.hash = "dashboard";
       setSection("dashboard");
     }
@@ -216,7 +216,7 @@ export function TempleShell() {
               sidebarExpanded ? "px-3" : "px-2"
             } py-2 space-y-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none`}
           >
-            {NAV_ITEMS.filter((item) => profile || !isPenangSection(item.id)).map((item) => {
+            {NAV_ITEMS.filter((item) => !isPenangSection(item.id) || isPenang).map((item) => {
               const Icon = ICONS[item.icon];
               const active = item.id === section;
               return (
@@ -365,12 +365,10 @@ export function TempleShell() {
         ============================= */}
         <header className="temple-topbar fixed top-0 right-0 z-20 flex items-center justify-between border-b shadow-sm">
           <div className="temple-topbar-group temple-topbar-selectors flex items-center gap-4">
-            {!profile && (
-              <div className="temple-topbar-live hidden sm:flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-bold tracking-wide bg-status-normal/10 border border-status-normal/20 text-status-normal shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-status-normal animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
-                LIVE
-              </div>
-            )}
+            <div className="temple-topbar-live hidden sm:flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-bold tracking-wide bg-status-normal/10 border border-status-normal/20 text-status-normal shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-status-normal animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
+              LIVE
+            </div>
 
             {/* State filter */}
             <div className="temple-topbar-filter relative hidden lg:block">
@@ -521,7 +519,7 @@ export function TempleShell() {
                     hour12: false,
                     hour: "2-digit",
                     minute: "2-digit",
-                    timeZone: profile?.timeZone,
+                    timeZone: temple?.state === "Malaysia" ? "Asia/Kuala_Lumpur" : undefined,
                   })}
                 </span>
                 <span className="text-[11px] font-medium text-muted-foreground">
@@ -529,7 +527,7 @@ export function TempleShell() {
                     weekday: "short",
                     day: "numeric",
                     month: "short",
-                    timeZone: profile?.timeZone,
+                    timeZone: temple?.state === "Malaysia" ? "Asia/Kuala_Lumpur" : undefined,
                   })}
                 </span>
               </div>
@@ -547,7 +545,7 @@ export function TempleShell() {
             )}
 
             {/* Bell */}
-            {!profile && <div className="relative ml-1">
+            <div className="relative ml-1">
               <button
                 aria-label={`Notifications, ${cctv.activeCount} active camera alerts`}
                 title="Notifications"
@@ -615,7 +613,7 @@ export function TempleShell() {
                   ))}
                 </div>
               )}
-            </div>}
+            </div>
 
             {/* Avatar */}
             <div className="temple-topbar-avatar grid h-10 w-10 place-items-center rounded-full text-xs font-bold text-white cursor-pointer transition-all duration-300 hover:scale-105 bg-[#1A1F60] shadow-sm ml-1 border border-white/20">
@@ -646,57 +644,41 @@ export function TempleShell() {
             <div
               className={`temple-workspace transition-all duration-200 ${shimmer ? "opacity-30 blur-[2px] pointer-events-none translate-y-2" : "opacity-100 translate-y-0 blur-none"}`}
             >
-              {profile && section === "dashboard" && <PenangTempleSection />}
-              {profile && (section === "map" || section === "heatmap") && <PenangMapSection />}
-              {profile && section === "store" && <PenangStoreSection />}
-              {profile && section !== "dashboard" && section !== "heatmap" && !isPenangSection(section) && (
-                <section className="rounded-2xl border bg-white p-5 sm:p-6">
-                  <h1 className="text-2xl font-extrabold">{currentSection?.label}</h1>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    This section has no connected data for {profile.name}.
-                  </p>
-                  <a href="#dashboard" className="mt-4 inline-block text-sm font-semibold text-primary underline underline-offset-4">
-                    View temple profile
-                  </a>
-                </section>
+              {currentSection && SectionIcon && subtitle && (
+                <div className="temple-page-heading">
+                  <span className="temple-page-icon" aria-hidden="true">
+                    <SectionIcon size={21} />
+                  </span>
+                  <div>
+                    <h1 className="text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl">
+                      {currentSection.label}
+                    </h1>
+                    <p className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
+                      {subtitle}
+                    </p>
+                  </div>
+                </div>
               )}
-              {temple && !("timeZone" in temple) && (
-                <>
-                  {currentSection && SectionIcon && subtitle && (
-                    <div className="temple-page-heading">
-                      <span className="temple-page-icon" aria-hidden="true">
-                        <SectionIcon size={21} />
-                      </span>
-                      <div>
-                        <h1 className="text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl">
-                          {currentSection.label}
-                        </h1>
-                        <p className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
-                          {subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                  {section === "dashboard" && <DashboardSection temple={temple} />}
-                  {section === "darshan" && <DarshanSection />}
-                  {section === "heatmap" && <HeatmapSection temple={temple} />}
-                  {section === "cctv" && (
-                    <CctvPage
-                      data={cctv}
-                      now={now.getTime()}
-                      user={auth.user ?? "Admin"}
-                      alertsOpen={cctvAlertsOpen}
-                      onAlertsOpenChange={setCctvAlertsOpen}
-                    />
-                  )}
-                  {(section as string) === "queue" && <QueueSection />}
-                  {section === "staff" && <StaffSection />}
-                  {section === "operations" && <OperationsSection />}
-                  {section === "parking" && <ParkingSection />}
-                  {section === "donations" && <DonationSection />}
-                  {section === "annadhanam" && <AnnadhanamSection temple={temple} />}
-                </>
+              {section === "dashboard" && <DashboardSection temple={temple} />}
+              {section === "heatmap" && <HeatmapSection temple={temple} />}
+              {section === "map" && <PenangMapSection />}
+              {section === "store" && <PenangStoreSection />}
+              {section === "cctv" && (
+                <CctvPage
+                  data={cctv}
+                  now={now.getTime()}
+                  user={auth.user ?? "Admin"}
+                  alertsOpen={cctvAlertsOpen}
+                  onAlertsOpenChange={setCctvAlertsOpen}
+                />
               )}
+              {section === "darshan" && <DarshanSection />}
+              {(section as string) === "queue" && <QueueSection />}
+              {section === "staff" && <StaffSection />}
+              {section === "operations" && <OperationsSection />}
+              {section === "parking" && <ParkingSection />}
+              {section === "donations" && <DonationSection />}
+              {section === "annadhanam" && <AnnadhanamSection temple={temple} />}
             </div>
           </div>
         </main>

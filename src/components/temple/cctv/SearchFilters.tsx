@@ -141,7 +141,7 @@ export function UploadPanel({
               try {
                 const res = await fetch(sampleTargetImg);
                 const blob = await res.blob();
-                const file = new File([blob], "target_person_navy_suit.jpg", { type: "image/jpeg" });
+                const file = new File([blob], "target_person_traditional_dhoti.jpg", { type: "image/jpeg" });
                 setPhoto(file);
               } catch (e) {
                 console.error(e);
@@ -150,7 +150,7 @@ export function UploadPanel({
             className="flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-white px-3 py-2 text-xs font-bold text-secondary hover:bg-secondary-tint/50 shadow-xs transition-all cursor-pointer"
           >
             <img src={sampleTargetImg} alt="" className="size-6 rounded-md object-cover border border-secondary/20" />
-            <span>Load Sample Subject (Man in Navy Blazer)</span>
+            <span>Load Reference Subject (Devotee in Silk Dhoti & Shirt)</span>
           </button>
         </div>
       )}

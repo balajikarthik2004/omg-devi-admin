@@ -1,24 +1,25 @@
-import approachStream from "@/assets/cctv/cctv-07-approach.mp4";
-import approachPoster from "@/assets/cctv/cctv-07-approach.jpg";
+import parkingBayStream from "@/assets/cctv/Man_walking_in_parking_facility_407098dc.mp4";
+import parkingBayPoster from "@/assets/cctv/Man_walking_in_parking_facility_407098dc.jpg";
+import gopuramEntranceStream from "@/assets/cctv/Man_entering_temple_gateway_4aa67822.mp4";
+import gopuramEntrancePoster from "@/assets/cctv/Man_entering_temple_gateway_4aa67822.jpg";
 import gopuramCrowdStream from "@/assets/cctv/cctv-flow-02-gopuram-crowd.mp4";
 import gopuramCrowdPoster from "@/assets/cctv/cctv-flow-02-gopuram-crowd.jpg";
-import entrywayStream from "@/assets/cctv/cctv-01-entrance.mp4";
-import entrywayPoster from "@/assets/cctv/cctv-01-entrance.jpg";
 import counterStream from "@/assets/cctv/cctv-06-counter.mp4";
 import counterPoster from "@/assets/cctv/cctv-06-counter.jpg";
 import courtyardStream from "@/assets/cctv/cctv-flow-05-courtyard.mp4";
 import courtyardPoster from "@/assets/cctv/cctv-flow-05-courtyard.jpg";
 import mandapamStream from "@/assets/cctv/cctv-flow-06-mandapam-hall.mp4";
 import mandapamPoster from "@/assets/cctv/cctv-flow-06-mandapam-hall.jpg";
-import queueAStream from "@/assets/cctv/cctv-02-queue-a.mp4";
-import queueAPoster from "@/assets/cctv/cctv-02-queue-a.jpg";
-import queueBStream from "@/assets/cctv/cctv-03-queue-b.mp4";
-import queueBPoster from "@/assets/cctv/cctv-03-queue-b.jpg";
-import corridorStream from "@/assets/cctv/cctv-04-corridor.mp4";
-import corridorPoster from "@/assets/cctv/cctv-04-corridor.jpg";
+import queueANorthStream from "@/assets/cctv/Man_walking_in_temple_queue_b9eb6be3.mp4";
+import queueANorthPoster from "@/assets/cctv/Man_walking_in_temple_queue_b9eb6be3.jpg";
+import vipQueueStream from "@/assets/cctv/cctv-03-queue-b.mp4";
+import vipQueuePoster from "@/assets/cctv/cctv-03-queue-b.jpg";
+import sanctumApproachStream from "@/assets/cctv/Man_walking_in_temple_corridor_b5edac3e.mp4";
+import sanctumApproachPoster from "@/assets/cctv/Man_walking_in_temple_corridor_b5edac3e.jpg";
 import match1 from "@/assets/cctv_match_1.png";
 import match2 from "@/assets/cctv_match_2.png";
 import match3 from "@/assets/cctv_match_3.png";
+import match4 from "@/assets/cctv_match_4.png";
 
 export const ZONES = [
   "Entrances & Exits",
@@ -101,6 +102,18 @@ export type Sighting = {
   timestamp: number;
   confidence: number;
   thumbnail: string;
+  stream: string;
+  poster: string;
+  boundingBox?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    label: string;
+    confidence: number;
+    freezeTimeSec: number;
+  };
+  attributes?: string[];
 };
 export type CameraScan = { cameraId: string; matches: Sighting[] };
 
@@ -109,26 +122,26 @@ const MINUTE = 60_000;
 const AUDIT_KEY = "temple-cctv-search-audit";
 const created = Date.now();
 const seed: [string, Zone, number, number][] = [
-  ["Outer Rajagopuram Approach", "Entrances & Exits", 95, 200],
-  ["Main Gopuram Concourse", "Entrances & Exits", 187, 250],
-  ["Temple Entryway Gateway", "Entrances & Exits", 142, 220],
-  ["Footwear & Deposit Counter", "Counters", 89, 180],
-  ["Outer Courtyard & Prakaram", "Entrances & Exits", 78, 190],
+  ["Temple Car Parking Bay", "Parking", 64, 150],
+  ["Main Gopuram Entrance", "Entrances & Exits", 112, 220],
+  ["Main Gopuram Concourse", "Entrances & Exits", 185, 250],
+  ["Footwear & Deposit Counter", "Counters", 92, 180],
+  ["Outer Courtyard & Prakaram", "Entrances & Exits", 76, 190],
   ["Maha Mandapam & Columned Hall", "Queues & Darshan", 154, 210],
-  ["General Darshan Queue Lane", "Queues & Darshan", 220, 235],
-  ["VIP Special Darshan Lane", "Queues & Darshan", 178, 240],
-  ["Inner Sanctum Approach Corridor", "Sanctum", 145, 260],
+  ["Queue Lane A — North Approach", "Queues & Darshan", 215, 240],
+  ["VIP Special Darshan Lane", "Queues & Darshan", 168, 220],
+  ["Inner Sanctum Approach", "Sanctum", 148, 260],
 ];
 const feeds = [
-  { stream: approachStream, poster: approachPoster },
+  { stream: parkingBayStream, poster: parkingBayPoster },
+  { stream: gopuramEntranceStream, poster: gopuramEntrancePoster },
   { stream: gopuramCrowdStream, poster: gopuramCrowdPoster },
-  { stream: entrywayStream, poster: entrywayPoster },
   { stream: counterStream, poster: counterPoster },
   { stream: courtyardStream, poster: courtyardPoster },
   { stream: mandapamStream, poster: mandapamPoster },
-  { stream: queueAStream, poster: queueAPoster },
-  { stream: queueBStream, poster: queueBPoster },
-  { stream: corridorStream, poster: corridorPoster },
+  { stream: queueANorthStream, poster: queueANorthPoster },
+  { stream: vipQueueStream, poster: vipQueuePoster },
+  { stream: sanctumApproachStream, poster: sanctumApproachPoster },
 ];
 type CameraRecord = Omit<Camera, "density" | "status" | "alertReason">;
 let cameras: CameraRecord[] = seed.map(([name, zone, count, capacity], index) => ({
@@ -332,18 +345,77 @@ export async function runPersonSearch(
   }
   const selected = cameras.filter((camera) => scope.cameraIds.includes(camera.id));
   const fixtures = [
-    [9, 2, 98],
-    [8, 6, 96],
-    [7, 11, 91],
-    [3, 16, 88],
-    [1, 22, 94],
+    {
+      camIndex: 8, // CAM-P09 (Inner Sanctum Approach)
+      minutesAgo: 2,
+      confidence: 99.4,
+      freezeTimeSec: 2.0,
+      bbox: { x: 67, y: 30, width: 21, height: 68 },
+      thumbnail: match1,
+      attributes: [
+        "Adult Male (26-34)",
+        "Ivory Silk Shirt",
+        "Gold Kasavu Angavastram",
+        "White Dhoti",
+        "Sacred Tilak",
+        "Sanctum Pillar Corridor",
+      ],
+    },
+    {
+      camIndex: 6, // CAM-P07 (Queue Lane A — North Approach)
+      minutesAgo: 7,
+      confidence: 99.5,
+      freezeTimeSec: 2.0,
+      bbox: { x: 43, y: 33, width: 14, height: 54 },
+      thumbnail: match2,
+      attributes: [
+        "Adult Male (26-34)",
+        "Ivory Silk Shirt",
+        "Gold Kasavu Angavastram",
+        "White Dhoti",
+        "Sacred Tilak",
+        "General Darshan Queue Lane",
+      ],
+    },
+    {
+      camIndex: 1, // CAM-P02 (Main Gopuram Entrance)
+      minutesAgo: 16,
+      confidence: 98.2,
+      freezeTimeSec: 2.0,
+      bbox: { x: 50, y: 49, width: 8, height: 28 },
+      thumbnail: match3,
+      attributes: [
+        "Adult Male (26-34)",
+        "Ivory Silk Shirt",
+        "Gold Kasavu Angavastram",
+        "White Dhoti",
+        "Sacred Tilak",
+        "Main Gopuram Entrance Courtyard",
+      ],
+    },
+    {
+      camIndex: 0, // CAM-P01 (Temple Car Parking Bay)
+      minutesAgo: 24,
+      confidence: 97.8,
+      freezeTimeSec: 2.0,
+      bbox: { x: 29, y: 58, width: 9, height: 36 },
+      thumbnail: match4,
+      attributes: [
+        "Adult Male (26-34)",
+        "Ivory Silk Shirt",
+        "Gold Kasavu Angavastram",
+        "White Dhoti",
+        "Temple Car Parking Bay",
+      ],
+    },
   ];
-  const matches = fixtures.flatMap(([number, minutes, confidence], index) => {
-    const camera = cameras[number - 1];
-    const seenAt = timestamp - minutes * MINUTE;
+
+  const matches = fixtures.flatMap((item, index) => {
+    const camera = cameras[item.camIndex];
+    const seenAt = timestamp - item.minutesAgo * MINUTE;
     if (
       !scope.cameraIds.includes(camera.id) ||
-      confidence < scope.confidence ||
+      item.confidence < scope.confidence ||
       seenAt < scope.from ||
       seenAt > scope.to
     )
@@ -355,8 +427,17 @@ export async function runPersonSearch(
         cameraName: camera.name,
         zone: camera.zone,
         timestamp: seenAt,
-        confidence,
-        thumbnail: [match1, match2, match3][index % 3],
+        confidence: item.confidence,
+        thumbnail: item.thumbnail,
+        stream: camera.stream,
+        poster: camera.poster,
+        boundingBox: {
+          ...item.bbox,
+          label: `AI MATCH ${item.confidence}% · ${camera.id}`,
+          confidence: item.confidence,
+          freezeTimeSec: item.freezeTimeSec,
+        },
+        attributes: item.attributes,
       },
     ];
   });
