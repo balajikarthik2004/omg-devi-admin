@@ -14,6 +14,7 @@ import {
 import { DescriptionSearch, ScopeFilters, UploadPanel, type ScopeFields } from "./SearchFilters";
 import { ScanProgress, SearchAuditDrawer, SearchResults } from "./SearchResults";
 import { field, muted, panel, relativeTime } from "./presentation";
+import { cctvAudio } from "@/lib/cctv-audio";
 
 const emptyDescription: Description = { gender: "", age: "", top: "", bottom: "", bag: false };
 const defaultScope: ScopeFields = { time: "1", from: "", to: "", confidence: 80, excluded: [] };
@@ -56,7 +57,10 @@ export function PersonSearch({
   const [history, setHistory] = useState<SearchAudit[]>([]);
   const recentAnchor = useRef(now);
   const controller = useRef<AbortController | null>(null);
-  useEffect(() => () => controller.current?.abort(), []);
+  useEffect(() => () => {
+    controller.current?.abort();
+    cctvAudio.stopAmbientScan();
+  }, []);
   useEffect(() => {
     if (!historyOpen) return;
     let current = true;
@@ -126,14 +130,19 @@ export function PersonSearch({
           ),
         current.signal,
       );
-      if (!current.signal.aborted) setScan({ stage: "results", matches });
+      if (!current.signal.aborted) {
+        cctvAudio.playScanComplete(matches.length > 0);
+        setScan({ stage: "results", matches });
+      }
     } catch {
+      cctvAudio.stopAmbientScan();
       if (!current.signal.aborted) setScan({ stage: "error" });
     } finally {
       controller.current = null;
     }
   }
   function reset() {
+    cctvAudio.stopAmbientScan();
     setScan({ stage: "idle" });
     setMode("photo");
     setPhoto(null);

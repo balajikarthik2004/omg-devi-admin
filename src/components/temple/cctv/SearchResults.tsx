@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowRight, Bell, Download, LocateFixed, Video, ScanFace, CheckCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Bell, Download, LocateFixed, Video, ScanFace, CheckCircle2, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { CameraScan, SearchAudit, Sighting } from "@/lib/cctv-service";
+import { cctvAudio } from "@/lib/cctv-audio";
 import { AiDetectionModal } from "./AiDetectionModal";
 import {
   absoluteTime,
@@ -23,13 +24,62 @@ import {
 
 export function ScanProgress({ ids, scans }: { ids: string[]; scans: CameraScan[] }) {
   const next = ids.find((id) => !scans.some((scan) => scan.cameraId === id));
+  const prevCount = useRef(0);
+  const [mutedAudio, setMutedAudio] = useState(() => cctvAudio.getMuted());
+
+  // Start subtle ambient radar sound while scanning
+  useEffect(() => {
+    cctvAudio.startAmbientScan();
+    return () => {
+      cctvAudio.stopAmbientScan();
+    };
+  }, []);
+
+  // Play ascending frequency tick and match pings as progress advances
+  useEffect(() => {
+    if (scans.length > prevCount.current) {
+      const latestScan = scans[scans.length - 1];
+      const hasMatch = latestScan ? latestScan.matches.length > 0 : false;
+      const ratio = scans.length / ids.length;
+      cctvAudio.playProgressStep(ratio, hasMatch);
+      prevCount.current = scans.length;
+    }
+  }, [scans.length, ids.length, scans]);
+
+  const toggleAudio = () => {
+    const nextVal = cctvAudio.toggleMute();
+    setMutedAudio(nextVal);
+    if (!nextVal) {
+      cctvAudio.startAmbientScan();
+      cctvAudio.playProgressStep(scans.length / ids.length, false);
+    }
+  };
+
   return (
     <section className={panel + " space-y-4 p-4 sm:p-5"}>
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-base font-extrabold">Scanning cameras</h3>
-        <span className="text-xs font-bold tabular-nums text-secondary">
-          {Math.round((scans.length / ids.length) * 100)}%
-        </span>
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-extrabold">Scanning cameras</h3>
+          {!mutedAudio && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 text-[10px] font-bold text-emerald-700 animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              Sonar Audio
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={toggleAudio}
+            title={mutedAudio ? "Unmute AI scanner sound" : "Mute scanner sound"}
+            className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
+          >
+            {mutedAudio ? <VolumeX size={14} /> : <Volume2 size={14} className="text-emerald-600" />}
+          </button>
+          <span className="text-xs font-bold tabular-nums text-secondary">
+            {Math.round((scans.length / ids.length) * 100)}%
+          </span>
+        </div>
       </div>
       <progress
         aria-label="Scan progress"
