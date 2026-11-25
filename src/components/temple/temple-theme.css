@@ -1,14 +1,14 @@
 .temple-admin {
   --sidebar-width: 64px;
+  --sidebar-expanded-width: 240px;
   --topbar-height: 92px;
   background: var(--temple-bg);
   color: var(--temple-ink);
 }
-.temple-admin[data-nav-expanded="true"] .temple-sidebar {
-  width: 240px;
-}
 .temple-admin .temple-sidebar {
   width: var(--sidebar-width);
+  /* Viewport units are scaled by the root zoom along with the sidebar. */
+  height: calc(100dvh / var(--app-scale));
   background: #072a1e;
   box-shadow: 4px 0 24px rgb(8 39 31 / 25%);
 }
@@ -67,6 +67,15 @@
   top: var(--topbar-height);
 }
 @media (max-width: 767px) {
+  .temple-admin {
+    --mobile-sidebar-width: min(var(--sidebar-expanded-width), calc(100% - var(--sidebar-width)));
+  }
+  .temple-admin[data-mobile-nav-open="true"] .temple-sidebar {
+    width: var(--mobile-sidebar-width);
+  }
+  .temple-admin .temple-nav-backdrop {
+    left: var(--mobile-sidebar-width);
+  }
   .temple-admin .temple-topbar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -112,10 +121,9 @@
 @media (min-width: 768px) {
   .temple-admin {
     --topbar-height: 60px;
-    --sidebar-width: 64px;
   }
   .temple-admin[data-nav-expanded="true"] {
-    --sidebar-width: 240px;
+    --sidebar-width: var(--sidebar-expanded-width);
   }
   .temple-admin .temple-topbar {
     flex-wrap: nowrap;
@@ -192,6 +200,6 @@
   }
 }
 
-.temple-admin :is(.temple-nav, .temple-profile) button:focus-visible {
+.temple-admin .temple-sidebar button:focus-visible {
   outline-color: var(--temple-gold);
 }

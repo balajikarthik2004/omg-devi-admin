@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   CalendarDays,
   Sun,
@@ -79,16 +79,27 @@ const SECTION_SUBTITLES: Partial<Record<SectionId, string>> = {
 };
 
 const isPenangSection = (id: SectionId) => id === "map" || id === "store";
+const desktopNavigationQuery = "(min-width: 768px)";
 
 export function TempleShell() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [sidebarExpanded, setSidebarExpanded] = useState(
-    () => matchMedia("(min-width: 768px)").matches,
+  const [desktopNavigation, setDesktopNavigation] = useState(
+    () => matchMedia(desktopNavigationQuery).matches,
   );
+  const [sidebarExpanded, setSidebarExpanded] = useState(desktopNavigation);
+  const mobileNavigationOpen = sidebarExpanded && !desktopNavigation;
+  const sidebarToggle = useRef<HTMLButtonElement>(null);
+  const dismissMobileNavigation = () => {
+    setSidebarExpanded(false);
+    sidebarToggle.current?.focus();
+  };
   useEffect(() => {
-    const media = matchMedia("(min-width: 768px)");
-    const update = () => setSidebarExpanded(media.matches);
+    const media = matchMedia(desktopNavigationQuery);
+    const update = () => {
+      setDesktopNavigation(media.matches);
+      setSidebarExpanded(media.matches);
+    };
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
@@ -162,16 +173,33 @@ export function TempleShell() {
       className="temple-admin relative min-h-dvh overflow-clip"
       data-section={section}
       data-nav-expanded={sidebarExpanded}
+      data-mobile-nav-open={mobileNavigationOpen}
     >
       <div className="relative z-10 flex min-h-dvh">
         <Toaster position="top-right" richColors theme="light" />
 
-        <aside className="temple-sidebar fixed top-0 left-0 z-30 flex h-dvh shrink-0 flex-col md:sticky bg-[#072a1e] text-white transition-[width] duration-300 ease-in-out border-r border-white/[0.06] shadow-[4px_0_24px_rgba(0,0,0,0.25)] select-none">
+        {mobileNavigationOpen && (
+          <button
+            type="button"
+            aria-label="Dismiss navigation"
+            tabIndex={-1}
+            onClick={dismissMobileNavigation}
+            className="temple-nav-backdrop fixed inset-y-0 right-0 z-30 bg-primary/50"
+          />
+        )}
+
+        <aside
+          id="temple-admin-sidebar"
+          className="temple-sidebar fixed top-0 left-0 z-40 flex shrink-0 flex-col self-start border-r border-white/10 text-white select-none md:sticky"
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && mobileNavigationOpen) dismissMobileNavigation();
+          }}
+        >
           {/* Logo row */}
           <div
-            className={`relative flex shrink-0 items-center ${
-              sidebarExpanded ? "px-4 pt-6 pb-4" : "px-2.5 pt-5 pb-3 justify-center"
-            } transition-all duration-300`}
+            className={`flex shrink-0 items-center gap-2 ${
+              sidebarExpanded ? "justify-between p-4" : "flex-col px-2 pt-4 pb-2"
+            }`}
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white shadow-[0_4px_16px_rgba(0,0,0,0.25)] p-1.5 transition-transform duration-300 hover:scale-105">
@@ -195,11 +223,13 @@ export function TempleShell() {
 
             {/* Collapse toggle */}
             <button
+              ref={sidebarToggle}
               type="button"
               onClick={() => setSidebarExpanded(!sidebarExpanded)}
               aria-label={sidebarExpanded ? "Collapse navigation" : "Expand navigation"}
               aria-expanded={sidebarExpanded}
-              className="absolute -right-3.5 top-7 z-40 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#072a1e] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-all duration-300 hover:scale-110 hover:shadow-[0_6px_16px_rgba(0,0,0,0.3)] border border-black/10 cursor-pointer"
+              aria-controls="temple-admin-sidebar"
+              className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-lg border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20"
             >
               {sidebarExpanded ? (
                 <ChevronLeft size={14} strokeWidth={2.5} />
@@ -212,7 +242,7 @@ export function TempleShell() {
           {/* Nav items */}
           <nav
             aria-label="Admin navigation"
-            className={`temple-nav relative min-h-0 flex-1 overflow-y-auto ${
+            className={`temple-nav relative min-h-0 flex-1 overflow-y-auto overscroll-contain ${
               sidebarExpanded ? "px-3" : "px-2"
             } py-2 space-y-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none`}
           >
@@ -227,7 +257,7 @@ export function TempleShell() {
                     setSection(item.id);
                     setBellOpen(false);
                     setCctvAlertsOpen(false);
-                    if (!matchMedia("(min-width: 768px)").matches) setSidebarExpanded(false);
+                    if (mobileNavigationOpen) setSidebarExpanded(false);
                   }}
                   aria-label={
                     item.label +
@@ -363,7 +393,10 @@ export function TempleShell() {
         {/* =============================
         TOPBAR
         ============================= */}
-        <header className="temple-topbar fixed top-0 right-0 z-20 flex items-center justify-between border-b shadow-sm">
+        <header
+          inert={mobileNavigationOpen}
+          className="temple-topbar fixed top-0 right-0 z-20 flex items-center justify-between border-b shadow-sm"
+        >
           <div className="temple-topbar-group temple-topbar-selectors flex items-center gap-4">
             <div className="temple-topbar-live hidden sm:flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-bold tracking-wide bg-status-normal/10 border border-status-normal/20 text-status-normal shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-status-normal animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
@@ -622,12 +655,12 @@ export function TempleShell() {
           </div>
         </header>
 
-        <main className="temple-content ml-[56px] min-h-dvh min-w-0 flex-1 pt-16 md:ml-0">
+        <main inert={mobileNavigationOpen} className="temple-content min-h-dvh min-w-0 flex-1">
           <div className="temple-content-inner relative mx-auto min-h-[calc(100dvh-4rem)] w-full max-w-[1600px] px-3 py-5 sm:p-6 lg:p-8">
             {/* Temple switch shimmer */}
             {shimmer && (
               <div
-                className={`temple-switch-loading fixed right-0 bottom-0 z-50 flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 bg-background/70`}
+                className={`temple-switch-loading fixed right-0 bottom-0 z-[25] flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 bg-background/70`}
               >
                 <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-red-500/5 backdrop-blur-xl shadow-[0_0_50px_rgba(239,68,68,0.15)] transform scale-110">
                   <span className="text-7xl font-montserrat text-primary/15 relative z-10">ॐ</span>

@@ -111,8 +111,9 @@
 @layer base {
   * { border-color: var(--color-border); }
   html {
+    --app-scale: 0.9;
     font-size: 14px;
-    zoom: 90%;
+    zoom: var(--app-scale);
   }
   html, body { font-family: var(--font-montserrat); }
   body {
