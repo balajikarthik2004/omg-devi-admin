@@ -934,7 +934,7 @@ export const PENANG_ZONES: ZoneItem[] = [
     waitTime: "45 mins",
   },
   {
-    id: "stairway",
+    id: "penang-stairway",
     name: "Hillside Stairway",
     subtitle: "500+ Steps Uphill Route",
     category: "mandapam",
@@ -994,7 +994,7 @@ export const PENANG_ZONES: ZoneItem[] = [
     waitTime: "0 mins",
   },
   {
-    id: "parking",
+    id: "penang-parking",
     name: "Temple Car Park",
     subtitle: "Approximate Area On-Site Parking",
     category: "parking",

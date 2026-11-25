@@ -172,7 +172,7 @@
   --tw-ring-color: var(--temple-success);
 }
 .cctv-tile-feed {
-  aspect-ratio: 2.08;
+  aspect-ratio: 16 / 9;
   border-radius: 13px 13px 5px 5px;
 }
 .cctv-tile .cctv-feed-shade {

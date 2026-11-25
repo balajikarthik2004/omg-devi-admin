@@ -70,9 +70,8 @@ export function CameraFeed({
         src={camera.poster}
         alt=""
         className={
-          "absolute inset-0 size-full object-cover " + (camera.online ? "" : "grayscale opacity-45")
+          "absolute inset-0 size-full object-cover object-center " + (camera.online ? "" : "grayscale opacity-45")
         }
-        style={{ objectPosition: 25 + number * 4 + "% " + (30 + number * 3) + "%" }}
       />
       {camera.online && (
         <video
@@ -81,15 +80,11 @@ export function CameraFeed({
           poster={camera.poster}
           muted
           autoPlay={focus}
-          preload={focus ? "auto" : "none"}
-          onLoadedMetadata={(event) =>
-            seekDemo(event.currentTarget, playback ?? (camera.demo ? number * 529 : null))
-          }
+          preload={focus ? "auto" : "metadata"}
           loop
           playsInline
           aria-hidden="true"
-          className="cctv-video absolute inset-0 size-full object-cover"
-          style={{ objectPosition: 25 + number * 4 + "% " + (30 + number * 3) + "%" }}
+          className="cctv-video absolute inset-0 size-full object-cover object-center"
         />
       )}
       <div aria-hidden="true" className="cctv-feed-shade pointer-events-none absolute inset-0" />

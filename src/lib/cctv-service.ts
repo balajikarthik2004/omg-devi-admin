@@ -1,11 +1,21 @@
-import entryStream from "@/assets/cctv/temple-entry.mp4";
-import entryPoster from "@/assets/cctv/temple-entry.jpg";
-import hallStream from "@/assets/cctv/temple-hall.mp4";
-import hallPoster from "@/assets/cctv/temple-hall.jpg";
-import sanctumStream from "@/assets/cctv/temple-sanctum.mp4";
-import sanctumPoster from "@/assets/cctv/temple-sanctum.jpg";
-import courtyardStream from "@/assets/cctv/temple-courtyard.mp4";
-import courtyardPoster from "@/assets/cctv/temple-courtyard.jpg";
+import entranceStream from "@/assets/cctv/cctv-01-entrance.mp4";
+import entrancePoster from "@/assets/cctv/cctv-01-entrance.jpg";
+import queueAStream from "@/assets/cctv/cctv-02-queue-a.mp4";
+import queueAPoster from "@/assets/cctv/cctv-02-queue-a.jpg";
+import queueBStream from "@/assets/cctv/cctv-03-queue-b.mp4";
+import queueBPoster from "@/assets/cctv/cctv-03-queue-b.jpg";
+import corridorStream from "@/assets/cctv/cctv-04-corridor.mp4";
+import corridorPoster from "@/assets/cctv/cctv-04-corridor.jpg";
+import mandapamStream from "@/assets/cctv/cctv-05-mandapam.mp4";
+import mandapamPoster from "@/assets/cctv/cctv-05-mandapam.jpg";
+import counterStream from "@/assets/cctv/cctv-06-counter.mp4";
+import counterPoster from "@/assets/cctv/cctv-06-counter.jpg";
+import approachStream from "@/assets/cctv/cctv-07-approach.mp4";
+import approachPoster from "@/assets/cctv/cctv-07-approach.jpg";
+import prakaramStream from "@/assets/cctv/cctv-08-prakaram.mp4";
+import prakaramPoster from "@/assets/cctv/cctv-08-prakaram.jpg";
+import parkingStream from "@/assets/cctv/cctv-09-parking.mp4";
+import parkingPoster from "@/assets/cctv/cctv-09-parking.jpg";
 import match1 from "@/assets/cctv_match_1.png";
 import match2 from "@/assets/cctv_match_2.png";
 import match3 from "@/assets/cctv_match_3.png";
@@ -100,35 +110,25 @@ const AUDIT_KEY = "temple-cctv-search-audit";
 const created = Date.now();
 const seed: [string, Zone, number, number][] = [
   ["Main Gopuram Entrance", "Entrances & Exits", 187, 250],
-  ["Queue Lane A", "Queues & Darshan", 220, 235],
-  ["Queue Lane B", "Queues & Darshan", 178, 240],
-  ["Inner Sanctum Approach", "Sanctum", 145, 260],
-  ["Prasad Counter", "Counters", 62, 155],
-  ["Parking Lot A", "Parking", 640, 800],
-  ["North Gate", "Entrances & Exits", 94, 220],
-  ["South Gate", "Entrances & Exits", 78, 190],
-  ["VIP Darshan Lane", "Queues & Darshan", 34, 90],
-  ["Emergency Exit (North)", "Entrances & Exits", 0, 75],
-  ["Temple Office Area", "Office", 12, 35],
-  ["Footwear Counter", "Counters", 89, 180],
+  ["Queue Lane A (North Approach)", "Queues & Darshan", 220, 235],
+  ["Queue Lane B (VIP Darshan Lane)", "Queues & Darshan", 178, 240],
+  ["Inner Sanctum Corridor", "Sanctum", 145, 260],
+  ["Maha Mandapam & Darshan Hall", "Queues & Darshan", 112, 190],
+  ["Footwear & Deposit Counter", "Counters", 89, 180],
+  ["Outer Rajagopuram Approach", "Entrances & Exits", 95, 200],
+  ["Prakaram & Courtyard Flow", "Entrances & Exits", 78, 190],
+  ["Temple Car Parking Bay", "Parking", 640, 800],
 ];
-const entry = { stream: entryStream, poster: entryPoster };
-const hall = { stream: hallStream, poster: hallPoster };
-const sanctum = { stream: sanctumStream, poster: sanctumPoster };
-const courtyard = { stream: courtyardStream, poster: courtyardPoster };
 const feeds = [
-  entry,
-  hall,
-  hall,
-  sanctum,
-  hall,
-  courtyard,
-  courtyard,
-  entry,
-  sanctum,
-  entry,
-  sanctum,
-  hall,
+  { stream: entranceStream, poster: entrancePoster },
+  { stream: queueAStream, poster: queueAPoster },
+  { stream: queueBStream, poster: queueBPoster },
+  { stream: corridorStream, poster: corridorPoster },
+  { stream: mandapamStream, poster: mandapamPoster },
+  { stream: counterStream, poster: counterPoster },
+  { stream: approachStream, poster: approachPoster },
+  { stream: prakaramStream, poster: prakaramPoster },
+  { stream: parkingStream, poster: parkingPoster },
 ];
 type CameraRecord = Omit<Camera, "density" | "status" | "alertReason">;
 let cameras: CameraRecord[] = seed.map(([name, zone, count, capacity], index) => ({
@@ -138,8 +138,8 @@ let cameras: CameraRecord[] = seed.map(([name, zone, count, capacity], index) =>
   count,
   capacity,
   countType: zone === "Parking" ? "vehicles" : "people",
-  online: index !== 9,
-  lastSeen: created - (index === 9 ? 12 * MINUTE : 0),
+  online: index !== 7,
+  lastSeen: created - (index === 7 ? 12 * MINUTE : 0),
   startedAt: created - (18 + index) * 60 * MINUTE,
   ...feeds[index],
   demo: true,
@@ -185,17 +185,17 @@ let alerts: CctvAlert[] = [
     acknowledged: false,
   },
   {
-    id: "a10",
-    cameraId: "CAM-P10",
+    id: "a8",
+    cameraId: "CAM-P08",
     type: "camera offline",
     severity: "warning",
-    message: "The north emergency exit camera stopped reporting.",
+    message: "North chariot gate camera sensor requires inspection.",
     timestamp: created - 12 * MINUTE,
     acknowledged: true,
   },
   {
-    id: "a5",
-    cameraId: "CAM-P05",
+    id: "a7",
+    cameraId: "CAM-P07",
     type: "unattended object",
     severity: "warning",
     message: "Unattended bag reported near the counter.",
@@ -339,7 +339,7 @@ export async function runPersonSearch(
     [1, 19, 86],
     [5, 24, 83],
     [2, 32, 82],
-    [12, 40, 76],
+    [7, 40, 76],
   ];
   const matches = fixtures.flatMap(([number, minutes, confidence], index) => {
     const camera = cameras[number - 1];
