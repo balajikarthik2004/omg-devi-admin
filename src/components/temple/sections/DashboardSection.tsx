@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AreaChart,
   Area,
@@ -9,7 +9,6 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend,
   ReferenceLine,
 } from "recharts";
 import { toast } from "sonner";
@@ -20,7 +19,6 @@ import {
   Car,
   Gauge,
   TrendingUp,
-  TrendingDown,
   Plus,
   Pause,
   Megaphone,
@@ -68,7 +66,17 @@ const queueTrendData = [
   { t: "2:30 PM", common: 52, special20: 46, quick100: 28, vip: 8, avg: 34, isLive: true },
 ];
 
-function CustomFootfallTooltip({ active, payload, label }: any) {
+type DashboardTooltipProps<Datum> = {
+  active?: boolean;
+  payload?: readonly { payload: Datum }[];
+  label?: string | number;
+};
+
+function CustomFootfallTooltip({
+  active,
+  payload,
+  label,
+}: DashboardTooltipProps<(typeof footfallAllData)[number]>) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0]?.payload;
   const isForecast = data?.actual === null && data?.forecast !== null;
@@ -76,19 +84,19 @@ function CustomFootfallTooltip({ active, payload, label }: any) {
   const val = data?.actual ?? data?.forecast ?? 0;
 
   return (
-    <div className="rounded-xl border border-white/20 bg-[#0F172A]/95 p-3.5 text-white shadow-2xl backdrop-blur-xl min-w-[210px]">
-      <div className="flex items-center justify-between pb-2 border-b border-white/10">
-        <div className="flex items-center gap-1.5 font-bold text-xs text-slate-300">
+    <div className="rounded-xl border border-border bg-popover p-3.5 text-popover-foreground shadow-lg min-w-[210px]">
+      <div className="flex items-center justify-between pb-2 border-b border-border">
+        <div className="flex items-center gap-1.5 font-bold text-xs text-foreground">
           <Clock size={13} className="text-primary" />
           <span>{label}</span>
         </div>
         <span
           className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider ${
             isCurrent
-              ? "bg-primary/20 text-primary border border-primary/40 animate-pulse"
+              ? "border border-primary/20 bg-primary/10 text-primary"
               : isForecast
-              ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-              : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                ? "border border-info/20 bg-info/10 text-info"
+                : "border border-emerald/20 bg-emerald/10 text-emerald"
           }`}
         >
           {isCurrent ? "● Live Now" : isForecast ? "AI Forecast" : "Recorded"}
@@ -96,99 +104,89 @@ function CustomFootfallTooltip({ active, payload, label }: any) {
       </div>
 
       <div className="pt-2.5">
-        <div className="text-[11px] font-medium text-slate-400">Devotee Inflow Rate</div>
+        <div className="text-[11px] font-medium text-muted-foreground">Devotee Inflow Rate</div>
         <div className="flex items-baseline gap-1.5 mt-0.5">
-          <span className="text-2xl font-black tracking-tight text-white">{val.toLocaleString()}</span>
-          <span className="text-[11px] font-semibold text-slate-400">devotees/hr</span>
+          <span className="text-2xl font-bold tracking-tight text-foreground">
+            {val.toLocaleString()}
+          </span>
+          <span className="text-[11px] font-semibold text-muted-foreground">devotees/hr</span>
         </div>
       </div>
 
       {data?.isPeak && (
-        <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-1 rounded-md">
-          <TrendingUp size={12} className="text-amber-400" /> Projected Peak Hour of the Day
+        <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold border border-gold/30 bg-gold/10 text-saffron px-2 py-1 rounded-md">
+          <TrendingUp size={12} className="text-saffron" /> Projected Peak Hour of the Day
         </div>
       )}
     </div>
   );
 }
 
-function CustomQueueTooltip({ active, payload, label }: any) {
+function CustomQueueTooltip({
+  active,
+  payload,
+  label,
+}: DashboardTooltipProps<(typeof queueTrendData)[number]>) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0]?.payload;
 
   return (
-    <div className="rounded-xl border border-white/20 bg-[#0F172A]/95 p-3.5 text-white shadow-2xl backdrop-blur-xl min-w-[220px]">
-      <div className="flex items-center justify-between pb-2 border-b border-white/10">
-        <div className="flex items-center gap-1.5 font-bold text-xs text-slate-300">
-          <Timer size={13} className="text-indigo-300" />
+    <div className="rounded-xl border border-border bg-popover p-3.5 text-popover-foreground shadow-lg min-w-[220px]">
+      <div className="flex items-center justify-between pb-2 border-b border-border">
+        <div className="flex items-center gap-1.5 font-bold text-xs text-foreground">
+          <Timer size={13} className="text-info" />
           <span>{label}</span>
         </div>
         {data?.isLive ? (
-          <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-primary/20 text-primary border border-primary/40 animate-pulse">
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold border border-primary/20 bg-primary/10 text-primary">
             ● Current
           </span>
         ) : (
-          <span className="text-[10px] font-semibold text-slate-400">Recorded</span>
+          <span className="text-[10px] font-semibold text-muted-foreground">Recorded</span>
         )}
       </div>
 
       <div className="space-y-1.5 pt-2.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <span className="h-2 w-2 rounded-full bg-[#E22E28]" /> Common Darshan
+          <span className="flex items-center gap-1.5 text-foreground font-medium">
+            <span className="h-2 w-2 rounded-full bg-destructive" /> Common Darshan
           </span>
-          <span className={`font-black ${data?.common >= 45 ? "text-[#E22E28]" : "text-white"}`}>
+          <span
+            className={`font-bold ${(data?.common ?? 0) >= 45 ? "text-destructive" : "text-foreground"}`}
+          >
             {data?.common} mins
           </span>
         </div>
 
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <span className="h-2 w-2 rounded-full bg-[#3B82F6]" /> ₹20 Darshan
+          <span className="flex items-center gap-1.5 text-foreground font-medium">
+            <span className="h-2 w-2 rounded-full bg-info" /> ₹20 Darshan
           </span>
-          <span className="font-black text-white">{data?.special20} mins</span>
+          <span className="font-bold text-foreground">{data?.special20} mins</span>
         </div>
 
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <span className="h-2 w-2 rounded-full bg-[#10B981]" /> ₹100 Darshan
+          <span className="flex items-center gap-1.5 text-foreground font-medium">
+            <span className="h-2 w-2 rounded-full bg-emerald" /> ₹100 Darshan
           </span>
-          <span className="font-black text-white">{data?.quick100} mins</span>
+          <span className="font-bold text-foreground">{data?.quick100} mins</span>
         </div>
 
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <span className="h-2 w-2 rounded-full bg-[#F59E0B]" /> VIP Darshan
+          <span className="flex items-center gap-1.5 text-foreground font-medium">
+            <span className="h-2 w-2 rounded-full bg-saffron" /> VIP Darshan
           </span>
-          <span className="font-black text-white">{data?.vip} mins</span>
+          <span className="font-bold text-foreground">{data?.vip} mins</span>
         </div>
       </div>
 
-      <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+      <div className="mt-2.5 pt-2 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
         <span>Average Wait</span>
-        <span className="font-extrabold text-white">{data?.avg} mins</span>
+        <span className="font-extrabold text-foreground">{data?.avg} mins</span>
       </div>
     </div>
   );
 }
-const activityFeed = [
-  {
-    t: "14:32",
-    c: "emerald",
-    msg: "Crowd normalized at South Entrance. Common Darshan queue reducing.",
-  },
-  { t: "14:28", c: "status-busy", msg: "₹20 Ticket Darshan wait time increased to 52 minutes." },
-  { t: "14:21", c: "danger", msg: "Peak crowd alert: Inner sanctum approaching capacity limit." },
-  {
-    t: "14:15",
-    c: "info",
-    msg: "8 volunteers Added to ₹100 Ticket Darshan per AI recommendation.",
-  },
-  { t: "14:08", c: "emerald", msg: "Parking Lot A returned to 70% after overflow activation." },
-  { t: "14:02", c: "status-busy", msg: "Kovil Nandi entrance crowd density: 78%." },
-  { t: "13:55", c: "info", msg: "AI forecast: Evening rush expected at 17:30–19:00." },
-  { t: "13:48", c: "emerald", msg: "Morning peak crowd dissipated. Wait time reduced to 28 min." },
-];
 const suggestions = [
   {
     kind: "URGENT",
@@ -257,7 +255,6 @@ const lanes = [
     status: "ACTIVE",
     bgTint: "bg-gold/10",
   },
-
 ];
 
 export function DashboardSection({ temple }: { temple: Temple }) {
@@ -276,102 +273,104 @@ export function DashboardSection({ temple }: { temple: Temple }) {
     return true;
   });
   return (
-    <div className="space-y-5">
+    <div className="@container space-y-6 font-body">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#1A1F60] via-[#252A7C] to-[#1A1F60] p-6 md:p-8 text-white shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
-        {/* Decorative shapes */}
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 h-64 w-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 -mb-20 h-40 w-40 rounded-full bg-saffron/10 blur-2xl pointer-events-none" />
-
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] items-center relative z-10">
+      <div className="temple-dashboard-hero rounded-2xl border border-primary bg-primary p-5 text-primary-foreground sm:p-7">
+        <div className="grid items-center gap-5 @min-[58rem]:grid-cols-[1fr_auto_1fr]">
           {/* Left Column */}
           <div className="flex flex-col items-start gap-4">
             <div>
-              <div className="text-2xl md:text-3xl font-extrabold tracking-tight drop-shadow-md">
+              <h2 className="font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
                 {temple.name}
-              </div>
-              <div className="text-[12px] text-indigo-200 mt-1 font-bold tracking-wide">
+              </h2>
+              <p className="mt-1 text-sm font-medium text-sidebar-muted">
                 Crowd Intelligence Dashboard
-              </div>
+              </p>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald/10 backdrop-blur-md px-3 py-1 text-[9px] font-bold tracking-widest text-emerald border border-emerald/20 shadow-sm mt-1">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+            <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold">
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-gold" />
+              Live{" "}
+              <span className="font-medium tabular-nums text-sidebar-muted">
+                · Updated {now.toLocaleTimeString("en-IN", { hour12: false })}
               </span>
-              LIVE <span className="opacity-80 font-medium tracking-normal">· Updated {now.toLocaleTimeString("en-IN", { hour12: false })}</span>
             </div>
           </div>
 
           {/* Middle Column */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 px-4 lg:px-8 border-y lg:border-y-0 lg:border-x border-white/10 py-6 lg:py-0">
-            <div className="relative h-[105px] w-[105px] shrink-0 drop-shadow-md">
-              <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.1)" strokeWidth="10" fill="none" />
+          <div className="flex items-center gap-4 border-y border-primary-foreground/15 py-4 @min-[58rem]:border-x @min-[58rem]:border-y-0 @min-[58rem]:px-5">
+            <div className="relative size-20 shrink-0 sm:size-24">
+              <svg aria-hidden="true" className="size-full -rotate-90" viewBox="0 0 100 100">
                 <circle
                   cx="50"
                   cy="50"
                   r="42"
-                  stroke="#f97316"
-                  strokeWidth="10"
+                  stroke="var(--primary-foreground)"
+                  strokeOpacity={0.15}
+                  strokeWidth="8"
+                  fill="none"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="42"
+                  stroke="var(--gold)"
+                  strokeWidth="8"
                   fill="none"
                   strokeDasharray="263.89"
                   strokeDashoffset={263.89 - (263.89 * pct) / 100}
                   strokeLinecap="round"
-                  className="transition-all duration-1000 ease-in-out"
+                  className="motion-safe:transition-[stroke-dashoffset] motion-safe:duration-500"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
-                <span className="text-[22px] font-extrabold text-white leading-none">{pct}%</span>
-                <span className="text-[8px] font-bold tracking-widest text-indigo-200 mt-1 uppercase">Capacity</span>
+                <span className="text-lg font-bold leading-none tabular-nums">{pct}%</span>
+                <span className="mt-1 text-[10px] font-medium text-sidebar-muted">Capacity</span>
               </div>
             </div>
 
-            <div className="text-center sm:text-left">
-              <div className="text-4xl font-extrabold tabular-nums text-white tracking-tight drop-shadow-md">
+            <div>
+              <div className="font-numeric text-3xl font-bold tracking-tight tabular-nums sm:text-4xl">
                 {inside.toLocaleString("en-IN")}
               </div>
-              <div className="text-[11px] text-indigo-200 mt-1 font-bold tracking-wide">
+              <div className="mt-1 text-xs font-medium text-sidebar-muted">
                 Devotees currently inside
               </div>
             </div>
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col justify-center">
+          <dl className="divide-y divide-primary-foreground/15">
             {[
-              { label: "Today's total Devotees", value: "76,480" },
+              { label: "Today's total devotees", value: "76,480" },
               { label: "Peak (10:30 AM)", value: "31,640" },
-              { label: "Darshan Flow Rate", value: "2,500 / hr" },
-              { label: "Next Peak (5:00 PM - 6:30 PM)", value: "18,500 Expected" },
-            ].map((stat, i) => (
+              { label: "Darshan flow rate", value: "2,500 / hr" },
+              { label: "Next peak (5:00–6:30 PM)", value: "18,500 expected" },
+            ].map((stat) => (
               <div
                 key={stat.label}
-                className={`flex justify-between items-center py-2.5 gap-4 ${i !== 3 ? "border-b border-white/10" : ""
-                  }`}
+                className="flex items-baseline justify-between gap-3 py-2 first:pt-0 last:pb-0"
               >
-                <span className="text-[12px] font-medium text-indigo-200 tracking-wide">
-                  {stat.label}
-                </span>
-                <span className="font-bold tabular-nums text-white text-sm whitespace-nowrap text-right">
+                <dt className="text-xs font-medium text-sidebar-muted">{stat.label}</dt>
+                <dd className="text-right text-xs font-bold tabular-nums sm:text-sm">
                   {stat.value}
-                </span>
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </div>
       {/* KPI Row */}
-      <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 @min-[34rem]:grid-cols-3 @min-[58rem]:grid-cols-5 @max-[34rem]:[&>*:last-child]:col-span-2">
         <StatCard
           icon={Clock}
           label="Current Queue Wait"
           value={wait}
           valueSuffix="mins"
-          sub={`Common Darshan · ${wait > 50 ? 'High' : wait > 30 ? 'Moderate' : 'Low'} load`}
+          sub={`Common Darshan · ${wait > 50 ? "High" : wait > 30 ? "Moderate" : "Low"} load`}
           color="text-foreground"
-          trend={{ up: wait > 45, text: wait > 45 ? "+surge" : "Normal" }}
+          status={{ warning: wait > 45, text: wait > 45 ? "Surge" : "Normal" }}
           bgTint="bg-saffron/10 text-saffron border border-saffron/20"
+          barGradient="var(--saffron)"
           progress={Math.min(100, Math.round((wait / 90) * 100))}
         />
         <StatCard
@@ -381,9 +380,10 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           valueSuffix="%"
           sub={`${inside.toLocaleString("en-IN")} inside · Max 20k`}
           color="text-status-busy"
-          bgTint="bg-status-busy/10 text-status-busy border border-status-busy/20"
+          bgTint="bg-gold/10 text-saffron border border-status-busy/20"
+          barGradient="var(--gold)"
           progress={pct}
-          trend={{ up: pct > 80, text: pct > 80 ? "Near full" : "Stable" }}
+          status={{ warning: pct > 80, text: pct > 80 ? "Near full" : "Stable" }}
         />
         <StatCard
           icon={Activity}
@@ -392,8 +392,9 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           sub="12 on break · 0 absent"
           color="text-info"
           bgTint="bg-info/10 text-info border border-info/20"
+          barGradient="var(--info)"
           progress={80}
-          trend={{ up: true, text: "80% staffed" }}
+          status={{ text: "80% staffed" }}
         />
         <StatCard
           icon={Car}
@@ -402,9 +403,10 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           valueSuffix="%"
           sub={`${Math.round(parking * 15)} slots used · ${Math.round((100 - parking) * 15)} free`}
           color="text-status-busy"
-          bgTint="bg-gold/10 text-gold border border-gold/20"
+          bgTint="bg-gold/10 text-saffron border border-gold/20"
+          barGradient="var(--gold)"
           progress={parking}
-          trend={{ up: parking > 85, text: parking > 85 ? "Near full" : "Available" }}
+          status={{ warning: parking > 85, text: parking > 85 ? "Near full" : "Available" }}
         />
         <StatCard
           icon={Gauge}
@@ -412,49 +414,46 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           value="BUSY"
           sub="Since 9:15 AM · Improving"
           color="text-status-crowded"
-          bgTint="bg-status-crowded/10 text-status-crowded border border-status-crowded/20"
+          bgTint="bg-status-crowded/10 text-destructive border border-status-crowded/20"
+          barGradient="var(--destructive)"
           progress={72}
-          trend={{ up: false, text: "72% density" }}
+          status={{ warning: true, text: "72% density" }}
         />
       </div>
       {/* AI Smart Suggestions - Card View */}
       <div>
-        <div className="mb-4 flex items-center gap-2 text-xl font-black tracking-tight text-foreground drop-shadow-sm">
-          🤖 AI Smart Suggestions
-          <span className="ml-2 text-sm font-bold text-muted-foreground/80 tracking-normal drop-shadow-none">
-            Based on current crowd patterns
-          </span>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold tracking-tight">
+          <Sparkles size={18} className="text-saffron" aria-hidden="true" /> AI Smart Suggestions
+        </h2>
+        <div className="grid gap-4 @min-[30rem]:grid-cols-2 @min-[58rem]:grid-cols-4">
           {suggestions.map((s) => {
             let kindColor = "text-muted-foreground bg-muted border-border";
-            const btnColor = "bg-[#1A1F60] hover:bg-[#252A7C] text-white shadow-[0_4px_12px_rgba(26,31,96,0.25)]";
-
-            if (s.kind === "URGENT") kindColor = "text-danger bg-danger/10 border-danger/20";
+            if (s.kind === "URGENT") kindColor = "text-destructive bg-danger/10 border-danger/20";
             if (s.kind === "WARNING") kindColor = "text-saffron bg-saffron/10 border-saffron/20";
             if (s.kind === "INFO") kindColor = "text-info bg-info/10 border-info/20";
             if (s.kind === "SUCCESS") kindColor = "text-emerald bg-emerald/10 border-emerald/20";
 
             return (
-              <div
-                key={s.title}
-                className={`group flex flex-col justify-between rounded-xl bg-white/60 backdrop-blur-xl p-6 border border-border/50 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden`}
-              >
+              <div key={s.title} className="temple-panel flex flex-col justify-between p-4 sm:p-5">
                 <div>
-                  <div className={`inline-flex items-center px-2.5 py-1 mb-3 rounded-full text-[9px] font-black tracking-widest border ${kindColor}`}>
+                  <div
+                    className={`mb-3 inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide ${kindColor}`}
+                  >
                     {s.kind}
                   </div>
-                  <div className="text-[13px] font-black tracking-tight text-foreground/90">{s.title}</div>
-                  <div className="mt-1.5 text-[11px] text-muted-foreground font-semibold leading-relaxed">{s.body}</div>
+                  <h3 className="text-sm font-bold leading-snug">{s.title}</h3>
+                  <p className="mt-1.5 text-xs font-medium leading-relaxed text-muted-foreground">
+                    {s.body}
+                  </p>
                 </div>
                 <div className="mt-5 flex gap-2">
                   <button
                     onClick={() => toast.success("Notifications sent")}
-                    className={`flex-1 rounded-xl py-2 text-[11px] font-extrabold transition-all hover:-translate-y-0.5 hover:shadow-md ${btnColor}`}
+                    className="flex-1 rounded-lg bg-primary px-2 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-secondary"
                   >
                     Execute
                   </button>
-                  <button className="flex-1 rounded-xl bg-surface border border-border/60 py-2 text-[11px] font-bold text-foreground shadow-sm transition-all hover:bg-muted hover:-translate-y-0.5">
+                  <button className="flex-1 rounded-lg border border-border bg-surface px-2 py-2 text-xs font-semibold transition-colors hover:bg-muted">
                     Dismiss
                   </button>
                 </div>
@@ -464,19 +463,19 @@ export function DashboardSection({ temple }: { temple: Temple }) {
         </div>
       </div>
       {/* Main Dashboard Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 @min-[64rem]:grid-cols-2">
         {/* Hourly Footfall Chart */}
-        <div className="rounded-2xl bg-white/70 backdrop-blur-xl p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5">
+        <div className="temple-panel flex flex-col p-4 sm:p-5">
           {/* Header */}
-          <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <Activity size={15} />
                 </div>
-                <h3 className="text-[15px] font-extrabold tracking-tight text-foreground">
+                <h2 className="font-display text-base font-bold tracking-tight text-foreground">
                   Today's Hourly Footfall
-                </h3>
+                </h2>
               </div>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Recorded actuals (5 AM – 2 PM) & AI projected rush (3 PM – 9 PM)
@@ -484,32 +483,39 @@ export function DashboardSection({ temple }: { temple: Temple }) {
             </div>
 
             {/* Filter buttons */}
-            <div className="flex items-center gap-1.5 self-start rounded-xl bg-muted/70 p-1 border border-border/50">
+            <div
+              role="group"
+              aria-label="Footfall time range"
+              className="flex flex-wrap items-center gap-1 self-start rounded-xl border border-border bg-muted p-1"
+            >
               <button
+                aria-pressed={footfallFilter === "all"}
                 onClick={() => setFootfallFilter("all")}
                 className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all ${
                   footfallFilter === "all"
-                    ? "bg-white text-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 All Day
               </button>
               <button
+                aria-pressed={footfallFilter === "morning"}
                 onClick={() => setFootfallFilter("morning")}
                 className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all ${
                   footfallFilter === "morning"
-                    ? "bg-white text-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Morning
               </button>
               <button
+                aria-pressed={footfallFilter === "evening"}
                 onClick={() => setFootfallFilter("evening")}
                 className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all ${
                   footfallFilter === "evening"
-                    ? "bg-white text-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -521,42 +527,50 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           {/* Key Stat Badges Strip */}
           <div className="mb-5 grid grid-cols-3 gap-2.5 rounded-xl bg-secondary-tint/40 p-2.5 border border-secondary-tint">
             <div className="text-center sm:text-left sm:px-2">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Current Rate</div>
-              <div className="text-sm font-black text-foreground flex items-center justify-center sm:justify-start gap-1 mt-0.5">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Current Rate
+              </div>
+              <div className="text-sm font-bold text-foreground flex items-center justify-center sm:justify-start gap-1 mt-0.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-status-normal animate-pulse" />
                 12,450 <span className="text-[10px] font-semibold text-muted-foreground">/hr</span>
               </div>
             </div>
             <div className="text-center sm:text-left sm:px-2 border-x border-border/50">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Day Peak</div>
-              <div className="text-sm font-black text-primary mt-0.5">
-                16.4k <span className="text-[10px] font-semibold text-muted-foreground">(6 PM)</span>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Day Peak
+              </div>
+              <div className="text-sm font-bold text-primary mt-0.5">
+                16.4k{" "}
+                <span className="text-[10px] font-semibold text-muted-foreground">(6 PM)</span>
               </div>
             </div>
             <div className="text-center sm:text-left sm:px-2">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Devotees Today</div>
-              <div className="text-sm font-black text-[#1A1F60] mt-0.5">
-                76,480
+              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Devotees Today
               </div>
+              <div className="text-sm font-bold text-primary mt-0.5">76,480</div>
             </div>
           </div>
 
           {/* Chart */}
-          <div className="h-[290px] w-full">
+          <div className="mb-4 h-[290px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={filteredFootfall} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
+              <AreaChart
+                data={filteredFootfall}
+                margin={{ top: 12, right: 12, left: -16, bottom: 0 }}
+              >
                 <defs>
                   {/* Actual recorded gradient */}
                   <linearGradient id="footfallActualGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#E22E28" stopOpacity={0.4} />
-                    <stop offset="60%" stopColor="#E22E28" stopOpacity={0.12} />
-                    <stop offset="100%" stopColor="#E22E28" stopOpacity={0.0} />
+                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.4} />
+                    <stop offset="60%" stopColor="var(--primary)" stopOpacity={0.12} />
+                    <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.0} />
                   </linearGradient>
                   {/* Forecast projected gradient */}
                   <linearGradient id="footfallForecastGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#818CF8" stopOpacity={0.35} />
-                    <stop offset="70%" stopColor="#818CF8" stopOpacity={0.08} />
-                    <stop offset="100%" stopColor="#818CF8" stopOpacity={0.0} />
+                    <stop offset="0%" stopColor="var(--info)" stopOpacity={0.35} />
+                    <stop offset="70%" stopColor="var(--info)" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="var(--info)" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -588,13 +602,13 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 {/* Vertical reference line for live hour */}
                 <ReferenceLine
                   x="2 PM"
-                  stroke="#E22E28"
+                  stroke="var(--primary)"
                   strokeDasharray="3 3"
                   strokeWidth={2}
                   label={{
                     value: "LIVE",
                     position: "top",
-                    fill: "#E22E28",
+                    fill: "var(--primary)",
                     fontSize: 10,
                     fontWeight: 900,
                   }}
@@ -605,10 +619,15 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                   type="monotone"
                   dataKey="actual"
                   name="Recorded Actual"
-                  stroke="#E22E28"
+                  stroke="var(--primary)"
                   strokeWidth={3}
                   fill="url(#footfallActualGradient)"
-                  activeDot={{ r: 6, fill: "#E22E28", stroke: "#FFFFFF", strokeWidth: 2 }}
+                  activeDot={{
+                    r: 6,
+                    fill: "var(--primary)",
+                    stroke: "var(--surface)",
+                    strokeWidth: 2,
+                  }}
                 />
 
                 {/* AI Forecast footfall */}
@@ -616,25 +635,30 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                   type="monotone"
                   dataKey="forecast"
                   name="AI Projected"
-                  stroke="#818CF8"
+                  stroke="var(--info)"
                   strokeDasharray="5 5"
                   strokeWidth={2.5}
                   fill="url(#footfallForecastGradient)"
-                  activeDot={{ r: 6, fill: "#818CF8", stroke: "#FFFFFF", strokeWidth: 2 }}
+                  activeDot={{
+                    r: 6,
+                    fill: "var(--info)",
+                    stroke: "var(--surface)",
+                    strokeWidth: 2,
+                  }}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
 
           {/* Custom Footer Legend */}
-          <div className="mt-4 flex flex-wrap items-center justify-between border-t border-border/40 pt-3 text-xs">
-            <div className="flex items-center gap-4">
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-3 text-xs">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <div className="flex items-center gap-1.5 font-bold text-foreground/80">
-                <span className="h-2.5 w-5 rounded-full bg-[#E22E28]" />
+                <span className="h-2.5 w-5 rounded-full bg-primary" />
                 <span>Recorded Actuals</span>
               </div>
-              <div className="flex items-center gap-1.5 font-bold text-indigo-500">
-                <span className="h-0.5 w-5 border-b-2 border-dashed border-indigo-400" />
+              <div className="flex items-center gap-1.5 font-bold text-info">
+                <span className="h-0.5 w-5 border-b-2 border-dashed border-info" />
                 <span>AI Prediction</span>
               </div>
             </div>
@@ -646,17 +670,17 @@ export function DashboardSection({ temple }: { temple: Temple }) {
         </div>
 
         {/* Queue Wait Time Chart */}
-        <div className="rounded-2xl bg-white/70 backdrop-blur-xl p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5">
+        <div className="temple-panel flex flex-col p-4 sm:p-5">
           {/* Header */}
-          <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary/10 text-secondary border border-secondary/20">
                   <Clock size={15} />
                 </div>
-                <h3 className="text-[15px] font-extrabold tracking-tight text-foreground">
+                <h2 className="font-display text-base font-bold tracking-tight text-foreground">
                   Queue Wait Time Trend
-                </h3>
+                </h2>
               </div>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 6-hour telemetry across 4 queue lines (9:00 AM – 2:30 PM)
@@ -664,41 +688,39 @@ export function DashboardSection({ temple }: { temple: Temple }) {
             </div>
 
             <div className="flex items-center gap-2 self-start">
-              <span className="rounded-full bg-secondary/10 px-3 py-1 text-[10px] font-black tracking-wide text-secondary border border-secondary/20">
+              <span className="rounded-full bg-secondary/10 px-3 py-1 text-[10px] font-bold tracking-wide text-secondary border border-secondary/20">
                 Avg: 34 mins
               </span>
             </div>
           </div>
 
           {/* Interactive Lane Toggle Pills with Live Wait Times */}
-          <div className="mb-5 flex flex-wrap gap-2">
+          <div role="group" aria-label="Queue lane" className="mb-5 flex flex-wrap gap-2">
             {[
-              { id: "all", label: "All Lanes", color: "#64748B", wait: null },
-              { id: "common", label: "Common", color: "#E22E28", wait: "52m" },
-              { id: "special20", label: "₹20 Ticket", color: "#3B82F6", wait: "46m" },
-              { id: "quick100", label: "₹100 Ticket", color: "#10B981", wait: "28m" },
-              { id: "vip", label: "VIP", color: "#F59E0B", wait: "8m" },
+              { id: "all", label: "All Lanes", color: "var(--muted-foreground)", wait: null },
+              { id: "common", label: "Common", color: "var(--destructive)", wait: "52m" },
+              { id: "special20", label: "₹20 Ticket", color: "var(--info)", wait: "46m" },
+              { id: "quick100", label: "₹100 Ticket", color: "var(--emerald)", wait: "28m" },
+              { id: "vip", label: "VIP", color: "var(--saffron)", wait: "8m" },
             ].map((lane) => {
               const isSelected = selectedQueueLane === lane.id;
               return (
                 <button
                   key={lane.id}
+                  aria-pressed={isSelected}
                   onClick={() => setSelectedQueueLane(lane.id)}
                   className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold transition-all border ${
                     isSelected
-                      ? "bg-foreground text-background border-foreground shadow-sm scale-102"
-                      : "bg-white/80 hover:bg-muted text-muted-foreground border-border/70"
+                      ? "border-primary/30 bg-secondary-tint text-primary"
+                      : "border-border bg-surface text-muted-foreground hover:bg-muted"
                   }`}
                 >
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: lane.color }}
-                  />
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: lane.color }} />
                   <span>{lane.label}</span>
                   {lane.wait && (
                     <span
-                      className={`ml-0.5 rounded px-1.5 py-0.2 text-[10px] font-extrabold ${
-                        isSelected ? "bg-white/20 text-white" : "bg-muted text-foreground"
+                      className={`ml-0.5 rounded px-1.5 py-0.5 text-[10px] font-extrabold ${
+                        isSelected ? "bg-primary/10 text-primary" : "bg-muted text-foreground"
                       }`}
                     >
                       {lane.wait}
@@ -710,9 +732,12 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Chart */}
-          <div className="h-[290px] w-full">
+          <div className="mb-4 h-[290px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={queueTrendData} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
+              <LineChart
+                data={queueTrendData}
+                margin={{ top: 12, right: 12, left: -16, bottom: 0 }}
+              >
                 <CartesianGrid
                   strokeDasharray="4 4"
                   stroke="var(--border)"
@@ -742,16 +767,9 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 {/* Congestion Alert Threshold line */}
                 <ReferenceLine
                   y={45}
-                  stroke="#E22E28"
+                  stroke="var(--destructive)"
                   strokeDasharray="3 3"
                   strokeOpacity={0.7}
-                  label={{
-                    value: "Crowd Warning Threshold (45m)",
-                    position: "insideTopRight",
-                    fill: "#E22E28",
-                    fontSize: 10,
-                    fontWeight: 800,
-                  }}
                 />
 
                 {/* Common Darshan */}
@@ -760,10 +778,15 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                     type="monotone"
                     dataKey="common"
                     name="Common Darshan"
-                    stroke="#E22E28"
+                    stroke="var(--destructive)"
                     strokeWidth={selectedQueueLane === "common" ? 4 : 3}
                     dot={false}
-                    activeDot={{ r: 6, fill: "#E22E28", stroke: "#FFFFFF", strokeWidth: 2 }}
+                    activeDot={{
+                      r: 6,
+                      fill: "var(--destructive)",
+                      stroke: "var(--surface)",
+                      strokeWidth: 2,
+                    }}
                   />
                 )}
 
@@ -773,10 +796,15 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                     type="monotone"
                     dataKey="special20"
                     name="₹20 Darshan"
-                    stroke="#3B82F6"
+                    stroke="var(--info)"
                     strokeWidth={selectedQueueLane === "special20" ? 4 : 3}
                     dot={false}
-                    activeDot={{ r: 6, fill: "#3B82F6", stroke: "#FFFFFF", strokeWidth: 2 }}
+                    activeDot={{
+                      r: 6,
+                      fill: "var(--info)",
+                      stroke: "var(--surface)",
+                      strokeWidth: 2,
+                    }}
                   />
                 )}
 
@@ -786,10 +814,15 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                     type="monotone"
                     dataKey="quick100"
                     name="₹100 Darshan"
-                    stroke="#10B981"
+                    stroke="var(--emerald)"
                     strokeWidth={selectedQueueLane === "quick100" ? 4 : 3}
                     dot={false}
-                    activeDot={{ r: 6, fill: "#10B981", stroke: "#FFFFFF", strokeWidth: 2 }}
+                    activeDot={{
+                      r: 6,
+                      fill: "var(--emerald)",
+                      stroke: "var(--surface)",
+                      strokeWidth: 2,
+                    }}
                   />
                 )}
 
@@ -799,10 +832,15 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                     type="monotone"
                     dataKey="vip"
                     name="VIP Darshan"
-                    stroke="#F59E0B"
+                    stroke="var(--saffron)"
                     strokeWidth={selectedQueueLane === "vip" ? 4 : 3}
                     dot={false}
-                    activeDot={{ r: 6, fill: "#F59E0B", stroke: "#FFFFFF", strokeWidth: 2 }}
+                    activeDot={{
+                      r: 6,
+                      fill: "var(--saffron)",
+                      stroke: "var(--surface)",
+                      strokeWidth: 2,
+                    }}
                   />
                 )}
               </LineChart>
@@ -810,38 +848,40 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Footer note */}
-          <div className="mt-4 flex flex-wrap items-center justify-between border-t border-border/40 pt-3 text-xs text-muted-foreground">
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground">
             <span className="font-semibold">
               Devotee wait duration is calculated using gate entry sensors & CCTV telemetry.
             </span>
-            <span className="font-bold text-[#E22E28]">
-              Common queue is +7m over threshold
+            <span className="inline-flex items-center gap-1.5 font-bold text-destructive">
+              <span
+                aria-hidden="true"
+                className="w-4 shrink-0 border-b-2 border-dashed border-destructive"
+              />
+              Common queue is 7 min over the 45 min threshold
             </span>
           </div>
         </div>
       </div>
 
       {/* --- QUEUE MANAGEMENT --- */}
-      <div className="mt-10 pt-10 border-t border-border/50 space-y-6">
-        <div className="flex items-center gap-2.5 text-[14px] font-black tracking-tight text-foreground drop-shadow-sm">
-          <Timer size={18} className="text-primary" /> Live Queue Management
-        </div>
+      <div className="space-y-4 border-t border-border pt-5">
+        <h2 className="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
+          <Timer size={18} className="text-primary" aria-hidden="true" /> Live Queue Management
+        </h2>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 @min-[30rem]:grid-cols-2 @min-[58rem]:grid-cols-4">
           {lanes.map((l) => {
             const pct = l.waiting / l.max;
             return (
-              <div
-                key={l.name}
-                className={`group flex flex-col justify-between p-6 bg-white/60 backdrop-blur-xl border border-border/50 shadow-sm rounded-xl transition-all duration-500 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden`}
-              >
+              <div key={l.name} className="temple-panel flex flex-col justify-between p-4 sm:p-5">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="font-bold text-[13px] tracking-tight text-foreground/90 leading-tight w-2/3">{l.name}</div>
+                  <h3 className="text-sm font-bold leading-tight">{l.name}</h3>
                   <span
-                    className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[8px] font-bold tracking-widest border ${l.status === "ACTIVE"
-                      ? "bg-emerald/10 text-emerald border-emerald/20"
-                      : "bg-status-busy/10 text-status-busy border-status-busy/20"
-                      }`}
+                    className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold tracking-wide border ${
+                      l.status === "ACTIVE"
+                        ? "bg-emerald/10 text-emerald border-emerald/20"
+                        : "bg-gold/10 text-saffron border-status-busy/20"
+                    }`}
                   >
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${l.status === "ACTIVE" ? "bg-emerald animate-pulse" : "bg-status-busy"}`}
@@ -860,8 +900,11 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 </div>
 
                 <div className="mt-3 flex items-center gap-3">
-                  <div className="h-1.5 flex-1 rounded-full bg-black/5 dark:bg-white/5 overflow-hidden">
-                    <div className={`h-full ${l.status === "ACTIVE" ? "bg-primary" : "bg-status-busy"}`} style={{ width: `${pct * 100}%` }} />
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full ${l.status === "ACTIVE" ? "bg-primary" : "bg-status-busy"}`}
+                      style={{ width: `${pct * 100}%` }}
+                    />
                   </div>
                   <span className="text-[10px] font-semibold text-muted-foreground w-8 text-right">
                     {Math.round(pct * 100)}%
@@ -870,15 +913,25 @@ export function DashboardSection({ temple }: { temple: Temple }) {
 
                 <div className="mt-5 pt-4 border-t border-border/40 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">Wait Time</span>
-                    <div className="flex items-baseline gap-1 text-danger">
-                      <span className="text-[18px] font-extrabold tracking-tighter leading-none">{l.wait}</span>
+                    <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+                      Wait Time
+                    </span>
+                    <div
+                      className={`flex items-baseline gap-1 tabular-nums ${l.wait >= 45 ? "text-destructive" : "text-foreground"}`}
+                    >
+                      <span className="text-[18px] font-extrabold tracking-tighter leading-none">
+                        {l.wait}
+                      </span>
                       <span className="text-[10px] font-semibold">mins</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">Staffing</span>
-                    <span className="text-[11px] font-bold text-foreground">{l.vols} <span className="text-muted-foreground/80 font-medium">vols</span></span>
+                    <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+                      Staffing
+                    </span>
+                    <span className="text-[11px] font-bold text-foreground">
+                      {l.vols} <span className="text-muted-foreground/80 font-medium">vols</span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -886,14 +939,14 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           })}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_280px_280px]">
+        <div className="grid gap-4 @min-[36rem]:grid-cols-2 @min-[64rem]:grid-cols-[1.4fr_1fr_1fr]">
           {/* AI Optimization */}
-          <div className="rounded-xl border border-saffron/30 bg-gradient-to-b from-saffron/10 to-white/40 backdrop-blur-xl flex flex-col justify-center shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 overflow-hidden">
-            <div className="flex items-center gap-2 border-b border-saffron/20 bg-saffron/10 px-6 py-4">
-              <AlertOctagon size={18} className="text-saffron animate-pulse" />
-              <div className="text-[13px] font-black tracking-widest uppercase text-saffron drop-shadow-sm">AI Optimization Recommended</div>
+          <div className="temple-panel overflow-hidden @min-[36rem]:col-span-2 @min-[64rem]:col-span-1">
+            <div className="flex items-center gap-2 border-b border-saffron/20 bg-gold/10 px-5 py-3 text-saffron">
+              <AlertOctagon size={18} className="shrink-0" aria-hidden="true" />
+              <h3 className="text-sm font-bold">AI Optimization Recommended</h3>
             </div>
-            <div className="p-6">
+            <div className="p-4 sm:p-5">
               <div className="text-sm font-bold text-foreground">Open Special Darshan Lane</div>
               <div className="mt-2 text-xs text-muted-foreground leading-relaxed">
                 Main queues are approaching 80% saturation. Projected wait times will exceed safety
@@ -902,11 +955,11 @@ export function DashboardSection({ temple }: { temple: Temple }) {
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={() => toast.success("Special Darshan Lane Opened.")}
-                  className="flex-1 rounded-lg bg-saffron py-2 text-xs font-bold text-white shadow-sm hover:bg-saffron/90 transition-all hover:-translate-y-0.5"
+                  className="flex-1 rounded-lg bg-saffron py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-saffron/90"
                 >
                   Execute
                 </button>
-                <button className="flex-1 rounded-lg border border-border bg-surface py-2 text-xs font-bold text-foreground transition-all hover:bg-muted hover:-translate-y-0.5">
+                <button className="flex-1 rounded-lg border border-border bg-surface py-2 text-xs font-semibold transition-colors hover:bg-muted">
                   Dismiss
                 </button>
               </div>
@@ -914,8 +967,8 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Queue Actions */}
-          <div className="rounded-xl bg-white/60 backdrop-blur-xl p-8 border border-border/50 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-            <div className="mb-5 text-[13px] font-extrabold tracking-tight text-foreground">Queue Actions</div>
+          <div className="temple-panel p-4 sm:p-5">
+            <h3 className="mb-4 text-sm font-bold">Queue Actions</h3>
             <div className="grid gap-2 text-[11px]">
               {[
                 { i: Plus, l: "Open New Lane" },
@@ -936,14 +989,16 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Queue Config */}
-          <div className="rounded-xl bg-white/60 backdrop-blur-xl p-8 flex flex-col justify-between border border-border/50 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+          <div className="temple-panel flex flex-col justify-between p-4 sm:p-5">
             <div>
-              <div className="mb-5 text-[13px] font-extrabold tracking-tight text-foreground">Queue Config</div>
+              <h3 className="mb-4 text-sm font-bold">Queue Config</h3>
               <div className="space-y-6 text-[11px]">
                 <div>
                   <div className="mb-1 flex justify-between">
                     <span className="font-semibold text-muted-foreground">Max intake rate</span>
-                    <span className="font-mono font-bold">{Math.round(inside / 100)} ppl/m</span>
+                    <span className="font-numeric font-bold tabular-nums">
+                      {Math.round(inside / 100)} ppl/m
+                    </span>
                   </div>
                   <input
                     type="range"
@@ -956,7 +1011,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 <div>
                   <div className="mb-1 flex justify-between">
                     <span className="font-semibold text-muted-foreground">Target wait time</span>
-                    <span className="font-mono font-bold">45 mins</span>
+                    <span className="font-numeric font-bold tabular-nums">45 mins</span>
                   </div>
                   <input
                     type="range"
@@ -979,4 +1034,4 @@ export function DashboardSection({ temple }: { temple: Temple }) {
       </div>
     </div>
   );
-} // Suppress unused void Users; void Clock; void Car; void Gauge;
+}

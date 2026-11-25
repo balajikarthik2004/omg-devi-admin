@@ -7,6 +7,7 @@ interface StatCardProps {
   color?: string;
   sub?: string;
   trend?: { up: boolean; text: string };
+  status?: { warning?: boolean; text: string };
   valueSuffix?: React.ReactNode;
   bgTint?: string;
   progress?: number;
@@ -20,6 +21,7 @@ export function StatCard({
   color = "",
   sub,
   trend,
+  status,
   valueSuffix,
   bgTint,
   progress,
@@ -53,7 +55,7 @@ export function StatCard({
             <span className="text-xs font-bold text-muted-foreground">{valueSuffix}</span>
           )}
         </div>
-        {(trend || sub) && (
+        {(trend || status || sub) && (
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             {trend && (
               <span
@@ -64,6 +66,16 @@ export function StatCard({
               >
                 {trend.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
                 {trend.text}
+              </span>
+            )}
+            {status && (
+              <span
+                className={
+                  "rounded-full px-1.5 py-0.5 text-[10px] font-bold " +
+                  (status.warning ? "bg-gold/10 text-saffron" : "bg-emerald/10 text-emerald")
+                }
+              >
+                {status.text}
               </span>
             )}
             {sub && <span className="text-[11px] font-medium text-muted-foreground">{sub}</span>}
