@@ -9,6 +9,7 @@
 }
 .temple-admin .temple-sidebar {
   width: var(--sidebar-width);
+  height: calc(100dvh / 0.9);
   background: #072a1e;
   box-shadow: 4px 0 24px rgb(8 39 31 / 25%);
 }
