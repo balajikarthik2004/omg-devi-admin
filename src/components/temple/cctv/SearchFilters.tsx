@@ -1,3 +1,4 @@
+import sampleTargetImg from "@/assets/cctv_target_person.jpg";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ImagePlus, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -116,23 +117,42 @@ export function UploadPanel({
           </div>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => input.current?.click()}
-          className={
-            "flex w-full flex-col items-center gap-1 rounded-xl border border-dashed p-5 text-center " +
-            (dragging
-              ? "border-secondary bg-secondary-tint"
-              : "border-secondary/35 bg-secondary-tint/40 hover:bg-secondary-tint")
-          }
-        >
-          <ImagePlus size={24} className="mb-1 text-secondary" />
-          <span className="flex items-center gap-1.5 text-sm font-bold text-secondary">
-            <Upload size={14} /> Upload photo
-          </span>
-          <span className={muted}>Drop or paste an image</span>
-          <span className="text-[10px] text-muted-foreground">JPG, PNG, WebP · Up to 10 MB</span>
-        </button>
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => input.current?.click()}
+            className={
+              "flex w-full flex-col items-center gap-1 rounded-xl border border-dashed p-4 text-center " +
+              (dragging
+                ? "border-secondary bg-secondary-tint"
+                : "border-secondary/35 bg-secondary-tint/40 hover:bg-secondary-tint")
+            }
+          >
+            <ImagePlus size={22} className="mb-1 text-secondary" />
+            <span className="flex items-center gap-1.5 text-xs font-bold text-secondary">
+              <Upload size={13} /> Upload reference photo
+            </span>
+            <span className={muted}>Drop or paste an image</span>
+            <span className="text-[10px] text-muted-foreground">JPG, PNG, WebP · Up to 10 MB</span>
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                const res = await fetch(sampleTargetImg);
+                const blob = await res.blob();
+                const file = new File([blob], "target_person_navy_suit.jpg", { type: "image/jpeg" });
+                setPhoto(file);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            className="flex items-center justify-center gap-2 rounded-xl border border-secondary/30 bg-white px-3 py-2 text-xs font-bold text-secondary hover:bg-secondary-tint/50 shadow-xs transition-all cursor-pointer"
+          >
+            <img src={sampleTargetImg} alt="" className="size-6 rounded-md object-cover border border-secondary/20" />
+            <span>Load Sample Subject (Man in Navy Blazer)</span>
+          </button>
+        </div>
       )}
       {error && (
         <p role="alert" className="text-xs font-semibold text-red-700">
@@ -201,6 +221,21 @@ export function DescriptionSearch({
         />
         Carrying a bag
       </label>
+      <button
+        type="button"
+        onClick={() =>
+          setValue({
+            gender: "Male",
+            age: "18–35",
+            top: "Blue",
+            bottom: "Black",
+            bag: false,
+          })
+        }
+        className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl border border-secondary/30 bg-white px-2.5 py-2 text-xs font-bold text-secondary hover:bg-secondary-tint/50 shadow-xs transition-colors cursor-pointer"
+      >
+        <span>Fill Preset: Man in Navy Blazer & White Shirt</span>
+      </button>
     </div>
   );
 }

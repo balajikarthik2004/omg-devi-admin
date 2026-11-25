@@ -1,21 +1,21 @@
-import entranceStream from "@/assets/cctv/cctv-01-entrance.mp4";
-import entrancePoster from "@/assets/cctv/cctv-01-entrance.jpg";
+import approachStream from "@/assets/cctv/cctv-07-approach.mp4";
+import approachPoster from "@/assets/cctv/cctv-07-approach.jpg";
+import gopuramCrowdStream from "@/assets/cctv/cctv-flow-02-gopuram-crowd.mp4";
+import gopuramCrowdPoster from "@/assets/cctv/cctv-flow-02-gopuram-crowd.jpg";
+import entrywayStream from "@/assets/cctv/cctv-01-entrance.mp4";
+import entrywayPoster from "@/assets/cctv/cctv-01-entrance.jpg";
+import counterStream from "@/assets/cctv/cctv-06-counter.mp4";
+import counterPoster from "@/assets/cctv/cctv-06-counter.jpg";
+import courtyardStream from "@/assets/cctv/cctv-flow-05-courtyard.mp4";
+import courtyardPoster from "@/assets/cctv/cctv-flow-05-courtyard.jpg";
+import mandapamStream from "@/assets/cctv/cctv-flow-06-mandapam-hall.mp4";
+import mandapamPoster from "@/assets/cctv/cctv-flow-06-mandapam-hall.jpg";
 import queueAStream from "@/assets/cctv/cctv-02-queue-a.mp4";
 import queueAPoster from "@/assets/cctv/cctv-02-queue-a.jpg";
 import queueBStream from "@/assets/cctv/cctv-03-queue-b.mp4";
 import queueBPoster from "@/assets/cctv/cctv-03-queue-b.jpg";
 import corridorStream from "@/assets/cctv/cctv-04-corridor.mp4";
 import corridorPoster from "@/assets/cctv/cctv-04-corridor.jpg";
-import mandapamStream from "@/assets/cctv/cctv-05-mandapam.mp4";
-import mandapamPoster from "@/assets/cctv/cctv-05-mandapam.jpg";
-import counterStream from "@/assets/cctv/cctv-06-counter.mp4";
-import counterPoster from "@/assets/cctv/cctv-06-counter.jpg";
-import approachStream from "@/assets/cctv/cctv-07-approach.mp4";
-import approachPoster from "@/assets/cctv/cctv-07-approach.jpg";
-import prakaramStream from "@/assets/cctv/cctv-08-prakaram.mp4";
-import prakaramPoster from "@/assets/cctv/cctv-08-prakaram.jpg";
-import parkingStream from "@/assets/cctv/cctv-09-parking.mp4";
-import parkingPoster from "@/assets/cctv/cctv-09-parking.jpg";
 import match1 from "@/assets/cctv_match_1.png";
 import match2 from "@/assets/cctv_match_2.png";
 import match3 from "@/assets/cctv_match_3.png";
@@ -109,26 +109,26 @@ const MINUTE = 60_000;
 const AUDIT_KEY = "temple-cctv-search-audit";
 const created = Date.now();
 const seed: [string, Zone, number, number][] = [
-  ["Main Gopuram Entrance", "Entrances & Exits", 187, 250],
-  ["Queue Lane A (North Approach)", "Queues & Darshan", 220, 235],
-  ["Queue Lane B (VIP Darshan Lane)", "Queues & Darshan", 178, 240],
-  ["Inner Sanctum Corridor", "Sanctum", 145, 260],
-  ["Maha Mandapam & Darshan Hall", "Queues & Darshan", 112, 190],
-  ["Footwear & Deposit Counter", "Counters", 89, 180],
   ["Outer Rajagopuram Approach", "Entrances & Exits", 95, 200],
-  ["Prakaram & Courtyard Flow", "Entrances & Exits", 78, 190],
-  ["Temple Car Parking Bay", "Parking", 640, 800],
+  ["Main Gopuram Concourse", "Entrances & Exits", 187, 250],
+  ["Temple Entryway Gateway", "Entrances & Exits", 142, 220],
+  ["Footwear & Deposit Counter", "Counters", 89, 180],
+  ["Outer Courtyard & Prakaram", "Entrances & Exits", 78, 190],
+  ["Maha Mandapam & Columned Hall", "Queues & Darshan", 154, 210],
+  ["General Darshan Queue Lane", "Queues & Darshan", 220, 235],
+  ["VIP Special Darshan Lane", "Queues & Darshan", 178, 240],
+  ["Inner Sanctum Approach Corridor", "Sanctum", 145, 260],
 ];
 const feeds = [
-  { stream: entranceStream, poster: entrancePoster },
+  { stream: approachStream, poster: approachPoster },
+  { stream: gopuramCrowdStream, poster: gopuramCrowdPoster },
+  { stream: entrywayStream, poster: entrywayPoster },
+  { stream: counterStream, poster: counterPoster },
+  { stream: courtyardStream, poster: courtyardPoster },
+  { stream: mandapamStream, poster: mandapamPoster },
   { stream: queueAStream, poster: queueAPoster },
   { stream: queueBStream, poster: queueBPoster },
   { stream: corridorStream, poster: corridorPoster },
-  { stream: mandapamStream, poster: mandapamPoster },
-  { stream: counterStream, poster: counterPoster },
-  { stream: approachStream, poster: approachPoster },
-  { stream: prakaramStream, poster: prakaramPoster },
-  { stream: parkingStream, poster: parkingPoster },
 ];
 type CameraRecord = Omit<Camera, "density" | "status" | "alertReason">;
 let cameras: CameraRecord[] = seed.map(([name, zone, count, capacity], index) => ({
@@ -332,14 +332,11 @@ export async function runPersonSearch(
   }
   const selected = cameras.filter((camera) => scope.cameraIds.includes(camera.id));
   const fixtures = [
-    [5, 6, 98],
-    [2, 9, 93],
-    [4, 13, 91],
-    [2, 16, 87],
-    [1, 19, 86],
-    [5, 24, 83],
-    [2, 32, 82],
-    [7, 40, 76],
+    [9, 2, 98],
+    [8, 6, 96],
+    [7, 11, 91],
+    [3, 16, 88],
+    [1, 22, 94],
   ];
   const matches = fixtures.flatMap(([number, minutes, confidence], index) => {
     const camera = cameras[number - 1];

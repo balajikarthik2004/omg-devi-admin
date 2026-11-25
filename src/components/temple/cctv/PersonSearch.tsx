@@ -19,9 +19,9 @@ const emptyDescription: Description = { gender: "", age: "", top: "", bottom: ""
 const defaultScope: ScopeFields = { time: "1", from: "", to: "", confidence: 80, excluded: [] };
 const reasons = ["Missing person", "Security incident", "Lost & found", "Other"];
 const demoRecent = [
-  { reason: "Missing person", caseRef: "MP-024", summary: "7 sightings · Prasad Counter", age: 18 },
-  { reason: "Lost & found", caseRef: "LF-117", summary: "3 sightings · Queue Lane A", age: 47 },
-  { reason: "Security incident", caseRef: "SI-063", summary: "2 sightings · North Gate", age: 115 },
+  { reason: "Subject search", caseRef: "VIP-042", summary: "5 sightings · Inner Sanctum & VIP Lane", age: 10 },
+  { reason: "Missing person", caseRef: "MP-108", summary: "3 sightings · Main Gopuram Concourse", age: 35 },
+  { reason: "Security verification", caseRef: "SV-019", summary: "2 sightings · Outer Approach", age: 70 },
 ];
 type ScanState =
   | { stage: "idle" }
