@@ -76,11 +76,11 @@ function LoginForm({ isCustomized }: { isCustomized: boolean }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <Button type="submit" className="login-btn-premium h-10 min-w-0 rounded-lg px-5 text-white sm:flex-1">
+        <div className="flex items-center justify-between pt-4">
+          <Button type="submit" className="login-btn-premium text-white rounded-lg px-8 h-10 w-full sm:w-auto">
             Sign In
           </Button>
-          <a href="#" className="whitespace-nowrap text-center text-[13px] font-bold text-foreground transition-colors hover:text-foreground">
+          <a href="#" className="text-[13px] font-bold text-foreground hover:text-foreground transition-colors">
             Forgot Password ?
           </a>
         </div>

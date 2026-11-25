@@ -644,7 +644,7 @@ export function TempleShell() {
             <div
               className={`temple-workspace transition-all duration-200 ${shimmer ? "opacity-30 blur-[2px] pointer-events-none translate-y-2" : "opacity-100 translate-y-0 blur-none"}`}
             >
-              {section !== "dashboard" && currentSection && SectionIcon && subtitle && (
+              {currentSection && SectionIcon && subtitle && (
                 <div className="temple-page-heading">
                   <span className="temple-page-icon" aria-hidden="true">
                     <SectionIcon size={21} />
