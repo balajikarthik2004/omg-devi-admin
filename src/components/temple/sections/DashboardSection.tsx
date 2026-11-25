@@ -87,7 +87,7 @@ function CustomFootfallTooltip({ active, payload, label }: any) {
             isCurrent
               ? "bg-primary/20 text-primary border border-primary/40 animate-pulse"
               : isForecast
-              ? "bg-secondary/20 text-indigo-300 border border-indigo-500/30"
+              ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
               : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
           }`}
         >
@@ -135,9 +135,9 @@ function CustomQueueTooltip({ active, payload, label }: any) {
       <div className="space-y-1.5 pt-2.5">
         <div className="flex items-center justify-between text-xs">
           <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <span className="h-2 w-2 rounded-full bg-[#E22E26]" /> Common Darshan
+            <span className="h-2 w-2 rounded-full bg-[#E22E28]" /> Common Darshan
           </span>
-          <span className={`font-black ${data?.common >= 45 ? "text-[#E22E26]" : "text-white"}`}>
+          <span className={`font-black ${data?.common >= 45 ? "text-[#E22E28]" : "text-white"}`}>
             {data?.common} mins
           </span>
         </div>
@@ -278,19 +278,23 @@ export function DashboardSection({ temple }: { temple: Temple }) {
   return (
     <div className="space-y-5">
       {/* Hero Banner */}
-      <div className="temple-dashboard-hero relative overflow-hidden rounded-xl border border-white/10 p-5 text-white md:p-7">
+      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#1A1F60] via-[#252A7C] to-[#1A1F60] p-6 md:p-8 text-white shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+        {/* Decorative shapes */}
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 h-64 w-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 -mb-20 h-40 w-40 rounded-full bg-saffron/10 blur-2xl pointer-events-none" />
+
         <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] items-center relative z-10">
           {/* Left Column */}
           <div className="flex flex-col items-start gap-4">
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
+              <div className="text-2xl md:text-3xl font-extrabold tracking-tight drop-shadow-md">
                 {temple.name}
-              </h1>
-              <div className="text-[12px] text-[#cee2d6] mt-1 font-bold tracking-wide">
+              </div>
+              <div className="text-[12px] text-indigo-200 mt-1 font-bold tracking-wide">
                 Crowd Intelligence Dashboard
               </div>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald/10 backdrop-blur-md px-3 py-1 text-[9px] font-bold tracking-widest text-[#b9edca] border border-emerald/20 shadow-sm mt-1">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald/10 backdrop-blur-md px-3 py-1 text-[9px] font-bold tracking-widest text-emerald border border-emerald/20 shadow-sm mt-1">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
@@ -308,7 +312,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                   cx="50"
                   cy="50"
                   r="42"
-                  stroke="var(--temple-gold)"
+                  stroke="#f97316"
                   strokeWidth="10"
                   fill="none"
                   strokeDasharray="263.89"
@@ -319,7 +323,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
                 <span className="text-[22px] font-extrabold text-white leading-none">{pct}%</span>
-                <span className="text-[8px] font-bold tracking-widest text-[#cee2d6] mt-1 uppercase">Capacity</span>
+                <span className="text-[8px] font-bold tracking-widest text-indigo-200 mt-1 uppercase">Capacity</span>
               </div>
             </div>
 
@@ -327,7 +331,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
               <div className="text-4xl font-extrabold tabular-nums text-white tracking-tight drop-shadow-md">
                 {inside.toLocaleString("en-IN")}
               </div>
-              <div className="text-[11px] text-[#cee2d6] mt-1 font-bold tracking-wide">
+              <div className="text-[11px] text-indigo-200 mt-1 font-bold tracking-wide">
                 Devotees currently inside
               </div>
             </div>
@@ -346,7 +350,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 className={`flex justify-between items-center py-2.5 gap-4 ${i !== 3 ? "border-b border-white/10" : ""
                   }`}
               >
-                <span className="text-[12px] font-medium text-[#cee2d6] tracking-wide">
+                <span className="text-[12px] font-medium text-indigo-200 tracking-wide">
                   {stat.label}
                 </span>
                 <span className="font-bold tabular-nums text-white text-sm whitespace-nowrap text-right">
@@ -358,7 +362,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
         </div>
       </div>
       {/* KPI Row */}
-      <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
         <StatCard
           icon={Clock}
           label="Current Queue Wait"
@@ -424,7 +428,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {suggestions.map((s) => {
             let kindColor = "text-muted-foreground bg-muted border-border";
-            const btnColor = "bg-primary hover:bg-[#252A7C] text-white shadow-[0_4px_12px_rgba(26,31,96,0.25)]";
+            const btnColor = "bg-[#1A1F60] hover:bg-[#252A7C] text-white shadow-[0_4px_12px_rgba(26,31,96,0.25)]";
 
             if (s.kind === "URGENT") kindColor = "text-danger bg-danger/10 border-danger/20";
             if (s.kind === "WARNING") kindColor = "text-saffron bg-saffron/10 border-saffron/20";
@@ -462,7 +466,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
       {/* Main Dashboard Content Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Hourly Footfall Chart */}
-        <div className="temple-panel rounded-2xl bg-white/70 p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500">
+        <div className="rounded-2xl bg-white/70 backdrop-blur-xl p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5">
           {/* Header */}
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -531,7 +535,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
             </div>
             <div className="text-center sm:text-left sm:px-2">
               <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Devotees Today</div>
-              <div className="text-sm font-black text-primary mt-0.5">
+              <div className="text-sm font-black text-[#1A1F60] mt-0.5">
                 76,480
               </div>
             </div>
@@ -544,9 +548,9 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 <defs>
                   {/* Actual recorded gradient */}
                   <linearGradient id="footfallActualGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#E22E26" stopOpacity={0.4} />
-                    <stop offset="60%" stopColor="#E22E26" stopOpacity={0.12} />
-                    <stop offset="100%" stopColor="#E22E26" stopOpacity={0.0} />
+                    <stop offset="0%" stopColor="#E22E28" stopOpacity={0.4} />
+                    <stop offset="60%" stopColor="#E22E28" stopOpacity={0.12} />
+                    <stop offset="100%" stopColor="#E22E28" stopOpacity={0.0} />
                   </linearGradient>
                   {/* Forecast projected gradient */}
                   <linearGradient id="footfallForecastGradient" x1="0" y1="0" x2="0" y2="1">
@@ -584,13 +588,13 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 {/* Vertical reference line for live hour */}
                 <ReferenceLine
                   x="2 PM"
-                  stroke="#E22E26"
+                  stroke="#E22E28"
                   strokeDasharray="3 3"
                   strokeWidth={2}
                   label={{
                     value: "LIVE",
                     position: "top",
-                    fill: "#E22E26",
+                    fill: "#E22E28",
                     fontSize: 10,
                     fontWeight: 900,
                   }}
@@ -601,10 +605,10 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                   type="monotone"
                   dataKey="actual"
                   name="Recorded Actual"
-                  stroke="#E22E26"
+                  stroke="#E22E28"
                   strokeWidth={3}
                   fill="url(#footfallActualGradient)"
-                  activeDot={{ r: 6, fill: "#E22E26", stroke: "#FFFFFF", strokeWidth: 2 }}
+                  activeDot={{ r: 6, fill: "#E22E28", stroke: "#FFFFFF", strokeWidth: 2 }}
                 />
 
                 {/* AI Forecast footfall */}
@@ -626,7 +630,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           <div className="mt-4 flex flex-wrap items-center justify-between border-t border-border/40 pt-3 text-xs">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 font-bold text-foreground/80">
-                <span className="h-2.5 w-5 rounded-full bg-[#E22E26]" />
+                <span className="h-2.5 w-5 rounded-full bg-[#E22E28]" />
                 <span>Recorded Actuals</span>
               </div>
               <div className="flex items-center gap-1.5 font-bold text-indigo-500">
@@ -642,7 +646,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
         </div>
 
         {/* Queue Wait Time Chart */}
-        <div className="temple-panel rounded-2xl bg-white/70 p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500">
+        <div className="rounded-2xl bg-white/70 backdrop-blur-xl p-6 sm:p-7 border border-border/60 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5">
           {/* Header */}
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -670,7 +674,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           <div className="mb-5 flex flex-wrap gap-2">
             {[
               { id: "all", label: "All Lanes", color: "#64748B", wait: null },
-              { id: "common", label: "Common", color: "#E22E26", wait: "52m" },
+              { id: "common", label: "Common", color: "#E22E28", wait: "52m" },
               { id: "special20", label: "₹20 Ticket", color: "#3B82F6", wait: "46m" },
               { id: "quick100", label: "₹100 Ticket", color: "#10B981", wait: "28m" },
               { id: "vip", label: "VIP", color: "#F59E0B", wait: "8m" },
@@ -738,13 +742,13 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                 {/* Congestion Alert Threshold line */}
                 <ReferenceLine
                   y={45}
-                  stroke="#E22E26"
+                  stroke="#E22E28"
                   strokeDasharray="3 3"
                   strokeOpacity={0.7}
                   label={{
                     value: "Crowd Warning Threshold (45m)",
                     position: "insideTopRight",
-                    fill: "#E22E26",
+                    fill: "#E22E28",
                     fontSize: 10,
                     fontWeight: 800,
                   }}
@@ -756,10 +760,10 @@ export function DashboardSection({ temple }: { temple: Temple }) {
                     type="monotone"
                     dataKey="common"
                     name="Common Darshan"
-                    stroke="#E22E26"
+                    stroke="#E22E28"
                     strokeWidth={selectedQueueLane === "common" ? 4 : 3}
                     dot={false}
-                    activeDot={{ r: 6, fill: "#E22E26", stroke: "#FFFFFF", strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: "#E22E28", stroke: "#FFFFFF", strokeWidth: 2 }}
                   />
                 )}
 
@@ -810,7 +814,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
             <span className="font-semibold">
               Devotee wait duration is calculated using gate entry sensors & CCTV telemetry.
             </span>
-            <span className="font-bold text-[#E22E26]">
+            <span className="font-bold text-[#E22E28]">
               Common queue is +7m over threshold
             </span>
           </div>
@@ -910,7 +914,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Queue Actions */}
-          <div className="temple-panel rounded-xl bg-white/60 p-8 border border-border/50 shadow-sm transition-all duration-500">
+          <div className="rounded-xl bg-white/60 backdrop-blur-xl p-8 border border-border/50 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
             <div className="mb-5 text-[13px] font-extrabold tracking-tight text-foreground">Queue Actions</div>
             <div className="grid gap-2 text-[11px]">
               {[
@@ -932,7 +936,7 @@ export function DashboardSection({ temple }: { temple: Temple }) {
           </div>
 
           {/* Queue Config */}
-          <div className="temple-panel rounded-xl bg-white/60 p-8 flex flex-col justify-between border border-border/50 shadow-sm transition-all duration-500">
+          <div className="rounded-xl bg-white/60 backdrop-blur-xl p-8 flex flex-col justify-between border border-border/50 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
             <div>
               <div className="mb-5 text-[13px] font-extrabold tracking-tight text-foreground">Queue Config</div>
               <div className="space-y-6 text-[11px]">
